@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="PbsDbWpContactStore.UI.TestPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PbsDbWpContactStore.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+	<Grid x:Name="ContentPanel" Margin="12,0,12,0">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<ListBox x:Name="PriorityList" Height="100" 
+						 HorizontalAlignment="Stretch" 
+						 VerticalAlignment="Top" 
+						 SelectedIndex="0">
+			<ListBoxItem Content="High"/>
+			<ListBoxItem Content="Medium"/>
+			<ListBoxItem Content="Low"/>
+		</ListBox>
+		<TextBox Text="{Binding ElementName=PriorityList, Path=SelectedItem.Content}"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Top"
+			Grid.Row="1" />
+	</Grid>
+</Page>

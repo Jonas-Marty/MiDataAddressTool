@@ -1,0 +1,10 @@
+﻿<Application
+    x:Class="PbsDbWpContactStore.View.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PbsDbWpContactStore.View"
+		xmlns:viewModel="using:PbsDbWpContactStore.ViewModel">
+	<Application.Resources>
+		<viewModel:PersonViewModel x:Key="PersonViewModel" />
+	</Application.Resources>
+</Application>

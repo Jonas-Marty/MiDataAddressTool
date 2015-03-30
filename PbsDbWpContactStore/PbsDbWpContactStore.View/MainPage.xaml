@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="PbsDbWpContactStore.View.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PbsDbWpContactStore.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+		DataContext="{StaticResource PersonViewModel}">
+
+	<Grid>
+		<StackPanel x:Name="TitlePanel">
+			<TextBlock Text="{Binding Path=PersonScoutName}"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Margin="12,0"/>
+			<TextBlock Text="{Binding Path=PersonFirstName}"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Margin="9,-7,0,0" />
+			<TextBlock Text="{Binding Path=PersonName}"
+                Style="{StaticResource TitleTextBlockStyle}"
+                Margin="9,-7,0,0" />
+		</StackPanel>
+		<ListBox x:Name="PeobleListBox"
+						 ItemsSource="{Binding Path=PeopleCollection}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding ScoutName}" />
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</Grid>
+</Page>
