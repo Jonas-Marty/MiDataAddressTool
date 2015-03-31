@@ -5,6 +5,6 @@
     xmlns:local="using:PbsDbWpContactStore.View"
 		xmlns:viewModel="using:PbsDbWpContactStore.ViewModel">
 	<Application.Resources>
-		<viewModel:PersonViewModel x:Key="PersonViewModel" />
+		
 	</Application.Resources>
 </Application>

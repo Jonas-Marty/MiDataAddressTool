@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace PbsDbAccess
 {
 	public class PbsDbAccess
 	{
+		private const string JsonMimeType = "application/json";
+
 		private const string BaseUrl = "https://db.scout.ch/";
 		private const string ReadTokenUrl = "/users/sign_in";
 		private const string GenerateTokenUrl = "/users/sign_in";
@@ -23,14 +26,14 @@ namespace PbsDbAccess
 
 
 		private readonly string _email;
-		private readonly PbsDbToken _token;
+		private readonly LoggedinUserInformation _loggedinUserInformation;
 
 		private readonly HttpClient _client;
 
-		public PbsDbAccess(string email, PbsDbToken token)
+		public PbsDbAccess(string email, LoggedinUserInformation loggedinUserInformation)
 		{
 			_email = email;
-			_token = token;
+			_loggedinUserInformation = loggedinUserInformation;
 			_client = CreateHttpClient();
 		}
 
@@ -48,8 +51,8 @@ namespace PbsDbAccess
 		{
 			HttpRequestMessage message = new HttpRequestMessage(method, uri);
 			message.Headers.Add("X-User-Email", _email);
-			message.Headers.Add("X-User-Token", _token.Value);
-			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+			message.Headers.Add("X-User-Token", _loggedinUserInformation.Token);
+			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonMimeType));
 			return message;
 		}
 
@@ -60,20 +63,44 @@ namespace PbsDbAccess
 		/// <param name="email"></param>
 		/// <param name="password"></param>
 		/// <returns></returns>
-		public static async Task<PbsDbToken> RecieveToken(string email, string password)
+		public static async Task<LoggedinUserInformation> RecieveUserInformationAsync(string email, string password)
 		{
 			var client = CreateHttpClient();
 
 			var formData = new Dictionary<string, string> { { EmailFormDataString, email }, { PasswortFormDataString, password } };
 			FormUrlEncodedContent requestContent = new FormUrlEncodedContent(formData);
 			var message = new HttpRequestMessage(HttpMethod.Post, ReadTokenUrl);
+			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonMimeType));
 			message.Content = requestContent;
 
 			HttpResponseMessage response = await client.SendAsync(message);
-			string responseContent = await response.Content.ReadAsStringAsync();
-			dynamic json = JObject.Parse(responseContent);
 
-			return new PbsDbToken(json.people.authentication_token);
+			if (!response.IsSuccessStatusCode)
+			{
+				HandleStatusCodeErrors(response, message);
+			}
+
+			string responseContent = await response.Content.ReadAsStringAsync();
+
+			return JsonParser.ParseLoggedinUserInformation(responseContent);
+		}
+
+		private static void HandleStatusCodeErrors(HttpResponseMessage response, HttpRequestMessage request)
+		{
+			//if (response.StatusCode == HttpStatusCode.Unauthorized)
+			//{
+			//	throw new InvalidLoginInformationException();
+			//}
+			throw new Exception(FormatHttpErrorMessage(response, request));
+		}
+
+		private static string FormatHttpErrorMessage(HttpResponseMessage response, HttpRequestMessage request)
+		{
+			return String.Format("{0} - {1}\nRequest Content:\n{2}\n\nResponse:\n{3}",
+				response.StatusCode,
+				response.ReasonPhrase,
+				"",
+				response.Content.ReadAsStringAsync().Result);
 		}
 
 		/// <summary>
