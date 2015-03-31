@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PbsDbWpContactStore.ViewMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PbsDbAccess", "PbsDbAccess\PbsDbAccess.csproj", "{C6444FF2-5CCB-411A-9327-5BB2B46ACBF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PbsDbAccessTestConsole", "PbsDbAccessTestConsole\PbsDbAccessTestConsole.csproj", "{93C38201-222C-44F6-A663-CC35B87E13C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,14 @@ Global
 		{C6444FF2-5CCB-411A-9327-5BB2B46ACBF3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6444FF2-5CCB-411A-9327-5BB2B46ACBF3}.Release|ARM.ActiveCfg = Release|Any CPU
 		{C6444FF2-5CCB-411A-9327-5BB2B46ACBF3}.Release|x86.ActiveCfg = Release|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{93C38201-222C-44F6-A663-CC35B87E13C8}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
