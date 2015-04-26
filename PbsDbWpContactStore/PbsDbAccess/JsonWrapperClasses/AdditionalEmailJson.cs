@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace PbsDbAccess.JsonWrapperClasses
 {
-	public class AdditionalEmail
+	public class AdditionalEmailJson
 	{
 		[JsonProperty("id")]
 		public string Id { get; set; }

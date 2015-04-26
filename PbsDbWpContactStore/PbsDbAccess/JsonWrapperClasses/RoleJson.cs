@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace PbsDbAccess.JsonWrapperClasses
 {
-	public class Role
+	public class RoleJson
 	{
 		[JsonProperty("id")]
 		public string Id { get; set; }
@@ -24,6 +24,6 @@ namespace PbsDbAccess.JsonWrapperClasses
 		public DateTime? DeletedAt { get; set; }
 
 		[JsonProperty("links")]
-		public RoleLinks RoleLinks { get; set; }
+		public LinksJson Links { get; set; }
 	}
 }

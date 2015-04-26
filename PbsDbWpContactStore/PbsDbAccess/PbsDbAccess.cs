@@ -5,55 +5,64 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using PbsDbAccess.Models;
 
 namespace PbsDbAccess
 {
 	public class PbsDbAccess
 	{
-		private const string JsonMimeType = "application/json";
-
-		private const string BaseUrl = "https://db.scout.ch/";
-		private const string ReadTokenUrl = "/users/sign_in";
-		private const string GenerateTokenUrl = "/users/sign_in";
-		private const string DeleteTokenUrl = "/users/sign_in";
-
-		private const string EmailFormDataString = "person[email]";
-		private const string PasswortFormDataString = "person[password]";
-		private const string EmailHeaderString = "X-User-Email";
-		private const string AuthentificationTokenHeaderString = "X-User-Token";
-
-
-		private readonly string _email;
 		private readonly LoggedinUserInformation _loggedinUserInformation;
 
 		private readonly HttpClient _client;
 
-		public PbsDbAccess(string email, LoggedinUserInformation loggedinUserInformation)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="email"></param>
+		/// <param name="loggedinUserInformation"></param>
+		public PbsDbAccess(LoggedinUserInformation loggedinUserInformation)
 		{
-			_email = email;
 			_loggedinUserInformation = loggedinUserInformation;
 			_client = CreateHttpClient();
 		}
 
-		private static HttpClient CreateHttpClient()
+		public Task<IEnumerable<Group>> RecieveAllGroupsFromLayerGroupAsync()
 		{
-			return new HttpClient { BaseAddress = new Uri(BaseUrl) };
+			return RecieveAllGroupsFromLayerGroupAsync(false);
 		}
 
-		private HttpRequestMessage CreateRequestMessage(Uri uri)
+		public Task<IEnumerable<Group>> RecieveAllGroupsFromLayerGroupRecursiveAsync()
 		{
-			return CreateRequestMessage(uri, HttpMethod.Get);
+			return RecieveAllGroupsFromLayerGroupAsync(true);
+		}
+		
+		public async Task<IEnumerable<Person>> RecievePersonsOfGroupAsync(string groupId)
+		{
+			string jsonResponse = await RecieveJsonContentAsync(string.Format(UrlConstants.PersonsOfGroupUrlFormatString, groupId));
+
+			return JsonParser.ParsePeopleOfGroup(jsonResponse);
 		}
 
-		private HttpRequestMessage CreateRequestMessage(Uri uri, HttpMethod method)
+		public async Task<Group> RecieveLayerGroupOfLoggedInUser()
 		{
-			HttpRequestMessage message = new HttpRequestMessage(method, uri);
-			message.Headers.Add("X-User-Email", _email);
-			message.Headers.Add("X-User-Token", _loggedinUserInformation.Token);
-			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonMimeType));
-			return message;
+			Group primaryGroup = await RecievePrimaryGroupFromLoggedInUserAsync();
+			if (primaryGroup.IsLayer)
+			{
+				return primaryGroup;
+			}
+			else
+			{
+				return await RecieveLayerGroupFromGroup(primaryGroup);
+			}
+		}
+
+		public async Task<IEnumerable<Person>> RecieveAllPersonsOfLayerGroup()
+		{
+			var layerGroup = await RecieveLayerGroupOfLoggedInUser();
+
+			string jsonResponse = await RecieveJsonContentAsync(string.Format(UrlConstants.PersonsOfGroupUrlFormatString, layerGroup.Id));
+
+			return JsonParser.ParsePeopleOfGroup(jsonResponse);
 		}
 
 		/// <summary>
@@ -67,17 +76,17 @@ namespace PbsDbAccess
 		{
 			var client = CreateHttpClient();
 
-			var formData = new Dictionary<string, string> { { EmailFormDataString, email }, { PasswortFormDataString, password } };
+			var formData = new Dictionary<string, string> { { UrlConstants.EmailFormDataString, email }, { UrlConstants.PasswortFormDataString, password } };
 			FormUrlEncodedContent requestContent = new FormUrlEncodedContent(formData);
-			var message = new HttpRequestMessage(HttpMethod.Post, ReadTokenUrl);
-			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonMimeType));
-			message.Content = requestContent;
+			var requestMessage = new HttpRequestMessage(HttpMethod.Post, UrlConstants.ReadTokenUrl);
+			requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(UrlConstants.JsonMimeType));
+			requestMessage.Content = requestContent;
 
-			HttpResponseMessage response = await client.SendAsync(message);
+			HttpResponseMessage response = await client.SendAsync(requestMessage);
 
 			if (!response.IsSuccessStatusCode)
 			{
-				HandleStatusCodeErrors(response, message);
+				HandleStatusCodeErrors(response);
 			}
 
 			string responseContent = await response.Content.ReadAsStringAsync();
@@ -85,21 +94,113 @@ namespace PbsDbAccess
 			return JsonParser.ParseLoggedinUserInformation(responseContent);
 		}
 
-		private static void HandleStatusCodeErrors(HttpResponseMessage response, HttpRequestMessage request)
+		private async Task<Group> RecieveLayerGroupFromGroup(Group group)
 		{
-			//if (response.StatusCode == HttpStatusCode.Unauthorized)
-			//{
-			//	throw new InvalidLoginInformationException();
-			//}
-			throw new Exception(FormatHttpErrorMessage(response, request));
+			return await RecieveGroupByIdAsync(group.LayerGroupId);
 		}
 
-		private static string FormatHttpErrorMessage(HttpResponseMessage response, HttpRequestMessage request)
+		private async Task<IEnumerable<Group>> RecieveAllSubGroupsFromGroupAsync(Group group, bool recursive = false)
 		{
-			return String.Format("{0} - {1}\nRequest Content:\n{2}\n\nResponse:\n{3}",
+			List<Group> groups = new List<Group>();
+			if (group.ChildGroupIds != null)
+			{
+				foreach (string childGroupId in group.ChildGroupIds)
+				{
+					var childGroup = await RecieveGroupByIdAsync(childGroupId);
+					groups.Add(childGroup);
+					if (recursive)
+					{
+						var subGroups = await RecieveAllSubGroupsFromGroupAsync(childGroup, true);
+						groups.AddRange(subGroups);
+					}
+				}
+			}
+			return groups;
+		}
+
+		private async Task<Group> RecievePrimaryGroupFromLoggedInUserAsync()
+		{
+			return await RecieveGroupByIdAsync(_loggedinUserInformation.PrimaryGroupId);
+		}
+
+
+		private async Task<IEnumerable<Group>> RecieveAllGroupsFromLayerGroupAsync(bool recursive)
+		{
+			var layerGroup = await RecieveLayerGroupOfLoggedInUser();
+
+			var subGroups = await RecieveAllSubGroupsFromGroupAsync(layerGroup, recursive);
+
+			return subGroups;
+		}
+
+		private async Task<Group> RecieveGroupByIdAsync(string groupId)
+		{
+			string jsonResponse = await RecieveJsonContentAsync(string.Format(UrlConstants.GroupUrlFormatString, groupId));
+
+			return JsonParser.ParseGroup(jsonResponse);
+		}
+
+		private async Task<string> RecieveJsonContentAsync(string uri)
+		{
+			var requestMessage = CreateGetRequestMessage(uri);
+			var response = await _client.SendAsync(requestMessage);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				HandleStatusCodeErrors(response);
+			}
+
+			return await response.Content.ReadAsStringAsync();
+		}
+
+		/// <summary>
+		/// Creates a request message to the given uri with the HTTP GET method.
+		/// </summary>
+		/// <param name="uri">The uri to request.</param>
+		/// <returns>The created <see cref="HttpRequestMessage"/>.</returns>
+		private HttpRequestMessage CreateGetRequestMessage(string uri)
+		{
+			return CreateRequestMessage(uri, HttpMethod.Get);
+		}
+
+		/// <summary>
+		/// Creats a request message to the given uri with the given method.
+		/// </summary>
+		/// <param name="uri">The uri to request.</param>
+		/// <param name="method">The method to use.</param>
+		/// <returns>The created <see cref="HttpRequestMessage"/>.</returns>
+		private HttpRequestMessage CreateRequestMessage(string uri, HttpMethod method)
+		{
+			HttpRequestMessage message = new HttpRequestMessage(method, uri);
+			message.Headers.Add("X-User-Email", _loggedinUserInformation.Email);
+			message.Headers.Add("X-User-Token", _loggedinUserInformation.Token);
+			message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(UrlConstants.JsonMimeType));
+			return message;
+		}
+
+		/// <summary>
+		/// Handles status code errors. This method assumes that a error is present.
+		/// </summary>
+		/// <param name="response">The <see cref="HttpResponseMessage"/> to handle</param>
+		private static void HandleStatusCodeErrors(HttpResponseMessage response)
+		{
+			if (response.StatusCode == HttpStatusCode.Unauthorized)
+			{
+				throw new InvalidLoginInformationException();
+			}
+			throw new Exception(FormatHttpErrorMessage(response));
+		}
+
+		/// <summary>
+		/// Formats an <see cref="HttpResponseMessage"/> for console output.
+		/// </summary>
+		/// <param name="response">The <see cref="HttpResponseMessage"/> to format.</param>
+		/// <returns>The formated string.</returns>
+		private static string FormatHttpErrorMessage(HttpResponseMessage response)
+		{
+			return String.Format("{0} - {1}\n\nResponse:\n{2}",
 				response.StatusCode,
 				response.ReasonPhrase,
-				"",
 				response.Content.ReadAsStringAsync().Result);
 		}
 
@@ -114,8 +215,17 @@ namespace PbsDbAccess
 		{
 			var parameterValueProjection = parameterValueCollection
 				.Select(keyValuePair => String.Format("{0}={1}", keyValuePair.Key, keyValuePair.Value));
-			string queryString = "?" + String.Join("&", parameterValueCollection);
+			string queryString = "?" + String.Join("&", parameterValueProjection);
 			return new Uri(urlWithoutParameters + queryString);
+		}
+
+		/// <summary>
+		/// Creates the correctly preconfigured <see cref="HttpClient"/> with the BaseAddress property allready set. Use allways this method.
+		/// </summary>
+		/// <returns>The correctly preconfigured <see cref="HttpClient"/> to comunicate with the PBS DB.</returns>
+		private static HttpClient CreateHttpClient()
+		{
+			return new HttpClient { BaseAddress = new Uri(UrlConstants.BaseUrl) };
 		}
 	}
 

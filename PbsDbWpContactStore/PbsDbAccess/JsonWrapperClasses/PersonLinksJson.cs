@@ -2,7 +2,7 @@
 
 namespace PbsDbAccess.JsonWrapperClasses
 {
-	public class PersonLinks
+	public class PersonLinksJson
 	{
 		[JsonProperty("phone_numbers")]
 		public string[] PhoneNumbers { get; set; }
