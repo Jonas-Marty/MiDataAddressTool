@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PbsDbAccess", "PbsDbAccess\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PbsDbAccessTestConsole", "PbsDbAccessTestConsole\PbsDbAccessTestConsole.csproj", "{93C38201-222C-44F6-A663-CC35B87E13C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HitzgiAddressTool", "HitzgiAddressTool\HitzgiAddressTool.csproj", "{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,14 @@ Global
 		{93C38201-222C-44F6-A663-CC35B87E13C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93C38201-222C-44F6-A663-CC35B87E13C8}.Release|ARM.ActiveCfg = Release|Any CPU
 		{93C38201-222C-44F6-A663-CC35B87E13C8}.Release|x86.ActiveCfg = Release|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Release|ARM.ActiveCfg = Release|Any CPU
+		{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

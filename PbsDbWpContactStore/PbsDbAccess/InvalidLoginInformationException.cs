@@ -4,7 +4,7 @@ namespace PbsDbAccess
 {
 	public class InvalidLoginInformationException : Exception
 	{
-		private const string DefaultMessage = "Passwort oder email falsch.";
+		private const string DefaultMessage = "Passwort oder Email falsch.";
 
 		public InvalidLoginInformationException()
 			: this(DefaultMessage)

@@ -6,7 +6,7 @@
 
 		public string Name { get; set; }
 
-		public bool IsLayer { get; set; }
+		public bool IsLayerGroup { get; set; }
 
 		public string ParentGroupId { get; set; }
 

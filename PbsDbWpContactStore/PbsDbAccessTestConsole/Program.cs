@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PbsDbAccess;
 using PbsDbAccess.Models;
 
 namespace PbsDbAccessTestConsole
@@ -12,24 +13,18 @@ namespace PbsDbAccessTestConsole
 		{
 			Console.BufferHeight = Int16.MaxValue - 1;
 
-			LoggedinUserInformation userInfo = null;
-			var task1 = Task.Run(async () => userInfo = await PbsDbAccess.PbsDbAccess.RecieveUserInformationAsync("wiwo@outlook.com", "J268210pfadi"));
+			PbsDbWebAccess access = null;
 
+			var task1 = Task.Run(async () => access = await PbsDbWebAccess.CreateInstanceAsync("wiwo@outlook.com", "J268210pfadi"));
 
 			try
 			{
 				task1.Wait();
-				Console.WriteLine(userInfo.Token);
 			}
 			catch (Exception)
 			{
 				Console.WriteLine(task1.Exception.InnerException.Message);
-
 			}
-
-			Console.ReadKey();
-
-			var access = new PbsDbAccess.PbsDbAccess(userInfo);
 
 			IEnumerable<Group> groups = null;
 			var task2 = Task.Run(async () => groups = await access.RecieveAllGroupsFromLayerGroupAsync());

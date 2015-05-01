@@ -47,8 +47,8 @@
     <Compile Include="JsonWrapperClasses\RootObjectJson.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Person.cs" />
-    <Compile Include="PbsDbAccess.cs" />
-    <Compile Include="Models\LoggedInUserInformation.cs" />
+    <Compile Include="PbsDbWebAccess.cs" />
+    <Compile Include="LoggedInUserInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UrlConstants.cs" />
   </ItemGroup>

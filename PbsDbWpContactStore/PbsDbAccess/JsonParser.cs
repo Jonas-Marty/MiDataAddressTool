@@ -1,16 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PbsDbAccess.JsonWrapperClasses;
 using PbsDbAccess.Models;
 
 namespace PbsDbAccess
 {
-	public static class JsonParser
+	/// <summary>
+	/// A class to parse the recieved json string into typed objects.
+	/// </summary>
+	internal static class JsonParser
 	{
-		public static LoggedinUserInformation ParseLoggedinUserInformation(string jsonString)
+		private static readonly JsonSerializer JsonSerializer;
+
+		static JsonParser()
+		{
+			var serializerSettings = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			JsonSerializer = JsonSerializer.Create(serializerSettings);
+		}
+
+		/// <summary>
+		/// Parses the LoggedInUserInformation out of the json string.
+		/// </summary>
+		/// <param name="jsonString">The json string to parse.</param>
+		/// <returns>The <see cref="LoggedinUserInformation"/>.</returns>
+		internal static LoggedinUserInformation ParseLoggedinUserInformation(string jsonString)
 		{
 			RootObjectJson root = DesierializeRootObject(jsonString);
 
@@ -29,14 +49,19 @@ namespace PbsDbAccess
 			return info;
 		}
 
-		public static Group ParseGroup(string jsonString)
+		/// <summary>
+		/// Parses a <see cref="Group"/> out of the recieved json string.
+		/// </summary>
+		/// <param name="jsonString">The recieved json string.</param>
+		/// <returns>The parsed <see cref="Group"/>.</returns>
+		internal static Group ParseGroup(string jsonString)
 		{
 			RootObjectJson root = DesierializeRootObject(jsonString);
 
 			Group group = new Group
 			{
 				Id = root.Groups[0].Id,
-				IsLayer = root.Groups[0].Layer,
+				IsLayerGroup = root.Groups[0].Layer,
 				Name = root.Groups[0].Name,
 				ParentGroupId = root.Groups[0].Links.ParentGroup,
 				LayerGroupId = root.Groups[0].Links.LayerGroup,
@@ -46,7 +71,12 @@ namespace PbsDbAccess
 			return group;
 		}
 
-		public static IEnumerable<Person> ParsePeopleOfGroup(string jsonString)
+		/// <summary>
+		/// Parses the the people of a <see cref="Group"/> out of the recieved json string.
+		/// </summary>
+		/// <param name="jsonString">The recieved json string.</param>
+		/// <returns>The parsed <see cref="Person"/>s.</returns>
+		internal static IEnumerable<Person> ParsePeopleOfGroup(string jsonString)
 		{
 			RootObjectJson root = DesierializeRootObject(jsonString);
 
@@ -84,15 +114,15 @@ namespace PbsDbAccess
 			});
 		}
 
-
-		private static RootObjectJson DesierializeRootObject(string jsonString)
+		/// <summary>
+		/// Deserializes the fiven json string into the a class scheme. This scheme must be further mapped
+		/// into custom classes.
+		/// </summary>
+		/// <param name="jsonString">The json string to parse</param>
+		/// <returns>The deserialized <see cref="RootObjectJson"/>.</returns>
+		internal static RootObjectJson DesierializeRootObject(string jsonString)
 		{
-			var serializerSettings = new JsonSerializerSettings
-			{
-				NullValueHandling = NullValueHandling.Ignore
-			};
-
-			return JsonSerializer.Create(serializerSettings).Deserialize<RootObjectJson>(new JsonTextReader(new StringReader(jsonString)));
+			return JsonSerializer.Deserialize<RootObjectJson>(new JsonTextReader(new StringReader(jsonString)));
 		}
 	}
 }
