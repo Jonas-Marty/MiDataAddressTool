@@ -61,6 +61,8 @@ namespace HitzgiAddressTool
 			// 
 			// emailTextBox
 			// 
+			this.emailTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.emailTextBox.Location = new System.Drawing.Point(160, 91);
 			this.emailTextBox.Name = "emailTextBox";
 			this.emailTextBox.Size = new System.Drawing.Size(415, 38);
@@ -68,6 +70,9 @@ namespace HitzgiAddressTool
 			// 
 			// passwortTextBox
 			// 
+			this.passwortTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.passwortTextBox.Location = new System.Drawing.Point(160, 148);
 			this.passwortTextBox.Name = "passwortTextBox";
 			this.passwortTextBox.Size = new System.Drawing.Size(415, 38);
@@ -83,6 +88,9 @@ namespace HitzgiAddressTool
 			// 
 			// loginButton
 			// 
+			this.loginButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.loginButton.Location = new System.Drawing.Point(450, 201);
 			this.loginButton.Name = "loginButton";
 			this.loginButton.Size = new System.Drawing.Size(125, 46);
@@ -101,6 +109,7 @@ namespace HitzgiAddressTool
 			// 
 			// loadingPictureBox
 			// 
+			this.loadingPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.loadingPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("loadingPictureBox.Image")));
 			this.loadingPictureBox.Location = new System.Drawing.Point(384, 195);
 			this.loadingPictureBox.Margin = new System.Windows.Forms.Padding(0);
@@ -113,6 +122,7 @@ namespace HitzgiAddressTool
 			// 
 			// LoginForm
 			// 
+			this.AcceptButton = this.loginButton;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(592, 320);
@@ -129,6 +139,7 @@ namespace HitzgiAddressTool
 			this.Name = "LoginForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Login";
+			this.Load += new System.EventHandler(this.LoginForm_Load);
 			((System.ComponentModel.ISupportInitialize)(this.loadingPictureBox)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

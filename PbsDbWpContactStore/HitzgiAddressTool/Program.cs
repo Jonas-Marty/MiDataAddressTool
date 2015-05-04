@@ -13,7 +13,20 @@ namespace HitzgiAddressTool
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new LoginForm());
+
+			InformationExchanger informationExchanger = new InformationExchanger();
+			LoginForm loginForm = new LoginForm { InformationExchanger = informationExchanger };
+
+			loginForm.ShowDialog();
+
+			if (informationExchanger.PbsDbWebAccess == null) //then terminate programm because user closed form
+			{
+				return;
+			}
+
+			MainForm mainForm = new MainForm { InformationExchanger = informationExchanger };
+
+			mainForm.ShowDialog();
 		}
 	}
 }
