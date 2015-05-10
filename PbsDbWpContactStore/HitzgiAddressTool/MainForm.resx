@@ -494,4 +494,10 @@
         egFOj7FVsy4ZWvVesan/7o5J+a7x48iTZ4gAADs=
 </value>
   </data>
+  <metadata name="serialPort1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="priorityInfoLabel.Text" xml:space="preserve">
+    <value>Manche Personen sind in mehr als einer Gruppe eingetragen, lege hier die Priorität fest welcher Gruppe sie zugeordnet werden sollen. Selektiere eine Gruppe und verschiebe sie mit den Tasten. Die oberste Gruppe hat die höchste priorität.</value>
+  </data>
 </root>

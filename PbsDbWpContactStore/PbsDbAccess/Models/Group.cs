@@ -1,5 +1,8 @@
-﻿namespace PbsDbAccess.Models
+﻿using System.Diagnostics;
+
+namespace PbsDbAccess.Models
 {
+	[DebuggerDisplay("{Id} - {Name},nq")]
 	public class Group
 	{
 		public string Id { get; set; }

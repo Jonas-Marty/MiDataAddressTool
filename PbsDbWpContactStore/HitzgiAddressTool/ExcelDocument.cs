@@ -73,8 +73,11 @@ namespace HitzgiAddressTool
 
 		private void Dispose(bool disposing)
 		{
-			_memoryStream.Dispose();
-			_excel.Dispose();
+			if (disposing)
+			{
+				_memoryStream.Dispose();
+				_excel.Dispose();
+			}
 		}
 
 		~ExcelDocument()

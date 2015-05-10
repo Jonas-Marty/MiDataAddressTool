@@ -45,17 +45,19 @@ namespace HitzgiAddressTool
 			// 
 			// emailLabel
 			// 
-			this.emailLabel.Location = new System.Drawing.Point(13, 91);
+			this.emailLabel.Location = new System.Drawing.Point(10, 38);
+			this.emailLabel.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.emailLabel.Name = "emailLabel";
-			this.emailLabel.Size = new System.Drawing.Size(100, 35);
+			this.emailLabel.Size = new System.Drawing.Size(38, 15);
 			this.emailLabel.TabIndex = 0;
 			this.emailLabel.Text = "Email";
 			// 
 			// passwordLabel
 			// 
-			this.passwordLabel.Location = new System.Drawing.Point(13, 148);
+			this.passwordLabel.Location = new System.Drawing.Point(10, 60);
+			this.passwordLabel.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.passwordLabel.Name = "passwordLabel";
-			this.passwordLabel.Size = new System.Drawing.Size(141, 38);
+			this.passwordLabel.Size = new System.Drawing.Size(53, 16);
 			this.passwordLabel.TabIndex = 1;
 			this.passwordLabel.Text = "Passwort";
 			// 
@@ -63,9 +65,10 @@ namespace HitzgiAddressTool
 			// 
 			this.emailTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.emailTextBox.Location = new System.Drawing.Point(160, 91);
+			this.emailTextBox.Location = new System.Drawing.Point(64, 38);
+			this.emailTextBox.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
 			this.emailTextBox.Name = "emailTextBox";
-			this.emailTextBox.Size = new System.Drawing.Size(415, 38);
+			this.emailTextBox.Size = new System.Drawing.Size(164, 20);
 			this.emailTextBox.TabIndex = 2;
 			// 
 			// passwortTextBox
@@ -73,27 +76,28 @@ namespace HitzgiAddressTool
 			this.passwortTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.passwortTextBox.Location = new System.Drawing.Point(160, 148);
+			this.passwortTextBox.Location = new System.Drawing.Point(64, 60);
+			this.passwortTextBox.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
 			this.passwortTextBox.Name = "passwortTextBox";
-			this.passwortTextBox.Size = new System.Drawing.Size(415, 38);
+			this.passwortTextBox.Size = new System.Drawing.Size(164, 20);
 			this.passwortTextBox.TabIndex = 3;
 			// 
 			// titelLabel
 			// 
-			this.titelLabel.Location = new System.Drawing.Point(13, 24);
+			this.titelLabel.Location = new System.Drawing.Point(10, 9);
+			this.titelLabel.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.titelLabel.Name = "titelLabel";
-			this.titelLabel.Size = new System.Drawing.Size(432, 43);
+			this.titelLabel.Size = new System.Drawing.Size(162, 18);
 			this.titelLabel.TabIndex = 4;
 			this.titelLabel.Text = "Gib deine anmelde Daten ein";
 			// 
 			// loginButton
 			// 
-			this.loginButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.loginButton.Location = new System.Drawing.Point(450, 201);
+			this.loginButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.loginButton.Location = new System.Drawing.Point(168, 84);
+			this.loginButton.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
 			this.loginButton.Name = "loginButton";
-			this.loginButton.Size = new System.Drawing.Size(125, 46);
+			this.loginButton.Size = new System.Drawing.Size(60, 25);
 			this.loginButton.TabIndex = 5;
 			this.loginButton.Text = "Login";
 			this.loginButton.UseVisualStyleBackColor = true;
@@ -102,19 +106,20 @@ namespace HitzgiAddressTool
 			// errorLabel
 			// 
 			this.errorLabel.ForeColor = System.Drawing.Color.Red;
-			this.errorLabel.Location = new System.Drawing.Point(163, 201);
+			this.errorLabel.Location = new System.Drawing.Point(61, 84);
+			this.errorLabel.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.errorLabel.Name = "errorLabel";
-			this.errorLabel.Size = new System.Drawing.Size(281, 74);
+			this.errorLabel.Size = new System.Drawing.Size(106, 25);
 			this.errorLabel.TabIndex = 6;
 			// 
 			// loadingPictureBox
 			// 
-			this.loadingPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.loadingPictureBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
 			this.loadingPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("loadingPictureBox.Image")));
-			this.loadingPictureBox.Location = new System.Drawing.Point(384, 195);
+			this.loadingPictureBox.Location = new System.Drawing.Point(144, 84);
 			this.loadingPictureBox.Margin = new System.Windows.Forms.Padding(0);
 			this.loadingPictureBox.Name = "loadingPictureBox";
-			this.loadingPictureBox.Size = new System.Drawing.Size(60, 60);
+			this.loadingPictureBox.Size = new System.Drawing.Size(22, 25);
 			this.loadingPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
 			this.loadingPictureBox.TabIndex = 7;
 			this.loadingPictureBox.TabStop = false;
@@ -123,9 +128,9 @@ namespace HitzgiAddressTool
 			// LoginForm
 			// 
 			this.AcceptButton = this.loginButton;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(592, 320);
+			this.ClientSize = new System.Drawing.Size(238, 120);
 			this.Controls.Add(this.loadingPictureBox);
 			this.Controls.Add(this.errorLabel);
 			this.Controls.Add(this.loginButton);
@@ -134,6 +139,7 @@ namespace HitzgiAddressTool
 			this.Controls.Add(this.emailTextBox);
 			this.Controls.Add(this.passwordLabel);
 			this.Controls.Add(this.emailLabel);
+			this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "LoginForm";

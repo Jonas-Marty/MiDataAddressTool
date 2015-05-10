@@ -5,23 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using log4net;
+using Newtonsoft.Json;
 using PbsDbAccess;
 
 namespace HitzgiAddressTool
 {
 	public partial class LoginForm : Form
 	{
-		private const string SettingsFoldername = "HitzgiAddressTool";
-		private const string CredentialsFileName = "Credentials.dat";
-
-		private string CompleteCredentialsFilePath
-		{
-			get
-			{
-				string pathToMyDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-				return Path.Combine(pathToMyDocuments, SettingsFoldername, CredentialsFileName);
-			}
-		}
+		private readonly ILog _log = LogManager.GetLogger(typeof(LoginForm));
 
 		public LoginForm()
 		{
@@ -62,12 +54,14 @@ namespace HitzgiAddressTool
 				//dieses Programmes und sende ihm das logfile welches du <<hier>> findest.
 				InformationExchanger.PbsDbWebAccess = await PbsDbWebAccess.CreateInstanceAsync(emailTextBox.Text, passwortTextBox.Text);
 				errorLabel.Text = "Login erfolgreich :)";
+				_log.Info("Successfully logged in");
 				Thread.Sleep(500);
 				Close();
 			}
 			catch (InvalidLoginInformationException ex)
 			{
 				errorLabel.Text = ex.Message;
+				_log.Info("Wrong login credentials provided");
 			}
 
 			LeaveLoadingMode();
@@ -100,48 +94,36 @@ namespace HitzgiAddressTool
 		{
 			LoginCredentials credentials = new LoginCredentials { Email = emailTextBox.Text, Password = passwortTextBox.Text };
 
-			CreateSettingsFolderIfNotExits();
-
-			using (FileStream fileStream = new FileStream(CompleteCredentialsFilePath, FileMode.Create))
+			try
 			{
-				XmlSerializer serializer = new XmlSerializer(typeof(LoginCredentials));
-				serializer.Serialize(fileStream, credentials);
+				FileUtil.SaveLoginCredentials(credentials);
+				_log.Info("Credentials successfuly saved");
+			}
+			catch (IOException ex)
+			{
+				_log.Warn("Credentials could not be saved", ex);
 			}
 		}
 
 		private void LoadCredentials()
 		{
-			if (!File.Exists(CompleteCredentialsFilePath))
-			{
-				return;
-			}
-
 			try
 			{
-				LoginCredentials loadedCredentials;
-				using (FileStream fileStream = new FileStream(CompleteCredentialsFilePath, FileMode.Open))
-				{
-					XmlSerializer serializer = new XmlSerializer(typeof (LoginCredentials));
-					loadedCredentials = (LoginCredentials) serializer.Deserialize(fileStream);
-				}
+				LoginCredentials loadedCredentials = FileUtil.LoadLoginCredentials();
 				emailTextBox.Text = loadedCredentials.Email;
 				passwortTextBox.Text = loadedCredentials.Password;
+				_log.Info("Credentials successfully loaded");
 			}
-			catch (InvalidOperationException) //The only exception XmlSerializer.Deserialize will throw
+			catch (JsonReaderException ex) //Something was wrong with the saved JsonText
 			{
+				_log.Warn("Credentials could not be loaded", ex);
 				//do nothing, just skip loading
 			}
-			catch (IOException) //thrown by new FileStream if somethings wrong there
+			catch (IOException ex) //thrown by new FileStream(...) if somethings wrong there
 			{
+				_log.Warn("Credentials could not be loaded", ex);
 				//also do nothing and skip loading the credentials
 			}
-		}
-
-		private void CreateSettingsFolderIfNotExits()
-		{
-			string directoryPath = Path.GetDirectoryName(CompleteCredentialsFilePath);
-			Debug.Assert(directoryPath != null, "Should never be null");
-			Directory.CreateDirectory(directoryPath);
 		}
 	}
 }

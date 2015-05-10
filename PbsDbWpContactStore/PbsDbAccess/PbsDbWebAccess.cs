@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using MoreLinq;
 using PbsDbAccess.Models;
 
 namespace PbsDbAccess
@@ -39,7 +40,7 @@ namespace PbsDbAccess
 		}
 
 		/// <summary>
-		/// Recieves the first following subgroups of the layergroup from the logged in user.
+		/// Recieves the first following subgroups of the layergroup including the layer group from the logged in user.
 		/// </summary>
 		/// <returns>First following subgroups.</returns>
 		public Task<IEnumerable<Group>> RecieveAllGroupsFromLayerGroupAsync()
@@ -48,7 +49,7 @@ namespace PbsDbAccess
 		}
 
 		/// <summary>
-		/// Recieves all subgroups of the layergroup from the logged in user.
+		/// Recieves all subgroups of the layergroup including the layer group from the logged in user.
 		/// </summary>
 		/// <returns>All subgroups.</returns>
 		public Task<IEnumerable<Group>> RecieveAllGroupsFromLayerGroupRecursiveAsync()
@@ -134,7 +135,7 @@ namespace PbsDbAccess
 		/// <param name="group">The group of which the subgroups should be returned.</param>
 		/// <param name="recursive">Determines if the subgroups of the subgroups should be included recursivly.</param>
 		/// <returns>Set of subgroups.</returns>
-		private async Task<IEnumerable<Group>> RecieveAllSubGroupsFromGroupAsync(Group group, bool recursive = false)
+		private async Task<List<Group>> RecieveAllSubGroupsFromGroupAsync(Group group, bool recursive = false)
 		{
 			List<Group> groups = new List<Group>();
 			if (group.ChildGroupIds != null)
@@ -166,7 +167,7 @@ namespace PbsDbAccess
 		/// Recieves the all groups from the layergroup of the loggedin user. The primary group of the user
 		/// is used for determining the next layergroup. The parameter <paramref name="recursive"/> determines
 		/// only the subgroups of the layergroup should be returned or if all subgroubs of all groubs should be
-		/// returned recursivly
+		/// returned recursivly. The Layergroup itself is included.
 		/// </summary>
 		/// <param name="recursive">Determines if the groups should be returned recursivly or not.</param>
 		/// <returns>All subgroups of the layergroup.</returns>
@@ -175,6 +176,8 @@ namespace PbsDbAccess
 			var layerGroup = await RecieveLayerGroupOfLoggedInUser();
 
 			var subGroups = await RecieveAllSubGroupsFromGroupAsync(layerGroup, recursive);
+
+			subGroups.Add(layerGroup);
 
 			return subGroups;
 		}
@@ -255,7 +258,7 @@ namespace PbsDbAccess
 		/// <returns>The formated string.</returns>
 		private static string FormatHttpErrorMessage(HttpResponseMessage response)
 		{
-			return String.Format("{0} - {1}\n\nResponse:\n{2}",
+			return string.Format("{0} - {1}\n\nResponse:\n{2}",
 				response.StatusCode,
 				response.ReasonPhrase,
 				response.Content.ReadAsStringAsync().Result);
