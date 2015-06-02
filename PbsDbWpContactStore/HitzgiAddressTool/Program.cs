@@ -32,6 +32,10 @@ namespace HitzgiAddressTool
 			AppDomain.CurrentDomain.UnhandledException +=
 				(o, e) => Log.Fatal("Unhandled Exception in Current Domain", e.ExceptionObject as Exception);
 
+			var layout = new PatternLayout("%date [%thread] %-5level %logger [%property{NDC}] - %message%newline");
+			layout.Footer = "[Log Start]";
+			layout.Footer = "[Log End]\n" + new string('-', 60);
+
 			var fileAppender = new FileAppender
 			{
 				AppendToFile = true,
@@ -40,7 +44,7 @@ namespace HitzgiAddressTool
 				LockingModel = new FileAppender.ExclusiveLock(),
 				Name = "HATFileAppender",
 				Threshold = new Level(LogLevel, "DEBUG"),
-				Layout = new PatternLayout("%date [%thread] %-5level %logger [%property{NDC}] - %message%newline")
+				Layout = layout				
 			};
 
 			fileAppender.ActivateOptions();
@@ -49,8 +53,9 @@ namespace HitzgiAddressTool
 
 			
 
-			Log.Info("Programm started and log4net configured");
-			
+			Log.Info("Program started and log4net configured");
+			Log.Info(string.Format("OS: {0}", Environment.OSVersion));
+
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
@@ -74,7 +79,7 @@ namespace HitzgiAddressTool
 			mainForm.ShowDialog();
 			Log.Info("MainForm closed");
 
-			Log.Info("Programm terminated after MainForme has been closed");
+			Log.Info("Program terminated after MainForme has been closed");
 		}
 	}
 }

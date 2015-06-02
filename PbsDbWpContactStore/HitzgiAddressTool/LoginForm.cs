@@ -97,7 +97,7 @@ namespace HitzgiAddressTool
 			try
 			{
 				FileUtil.SaveLoginCredentials(credentials);
-				_log.Info("Credentials successfuly saved");
+				_log.Info("Credentials successfully saved");
 			}
 			catch (IOException ex)
 			{

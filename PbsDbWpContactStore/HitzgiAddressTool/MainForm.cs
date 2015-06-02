@@ -316,7 +316,7 @@ namespace HitzgiAddressTool
 			}
 			else
 			{
-				_log.Info("Save of group priority list was successfull");
+				_log.Info("Save of group priority list was successful");
 			}
 		}
 
@@ -326,17 +326,17 @@ namespace HitzgiAddressTool
 			try
 			{
 				groupPriorityList = FileUtil.LoadGroupPriorities();
-				_log.Info("Grouppriorities successfully loaded from file");
+				_log.Info("Group priorities successfully loaded from file");
 				return true;
 			}
 			catch (JsonReaderException ex)
 			{
-				_log.Warn("Grouppriorities could not be loaded", ex);
+				_log.Warn("Group priorities could not be loaded", ex);
 				//somthings wrong with the json file, ignore it
 			}
 			catch (IOException ex)
 			{
-				_log.Warn("Grouppriorities could not be loaded", ex);
+				_log.Warn("Group priorities could not be loaded", ex);
 				//somthings wrong with the file, ignore it
 			}
 			return false;
