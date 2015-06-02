@@ -32,9 +32,12 @@ namespace HitzgiAddressTool
 			AppDomain.CurrentDomain.UnhandledException +=
 				(o, e) => Log.Fatal("Unhandled Exception in Current Domain", e.ExceptionObject as Exception);
 
-			var layout = new PatternLayout("%date [%thread] %-5level %logger [%property{NDC}] - %message%newline");
-			layout.Footer = "[Log Start]";
-			layout.Footer = "[Log End]\n" + new string('-', 60);
+			var layout = new PatternLayout("%date Thread:[%2thread] %-5level %logger - %message%newline")
+			{
+				
+				Header = "[Log Start]\n",
+				Footer = "[Log End]\n" + new string('-', 60) + "\n"
+			};
 
 			var fileAppender = new FileAppender
 			{
@@ -54,7 +57,17 @@ namespace HitzgiAddressTool
 			
 
 			Log.Info("Program started and log4net configured");
+			Log.Info(string.Format("ProductName: {0}", Application.ProductName));
+			Log.Info(string.Format("ProductVersion: {0}", Application.ProductVersion));
+			Log.Info(string.Format("ExecutablePath: {0}", Application.ExecutablePath));
+			Log.Info(string.Format("StartUpPath: {0}", Application.StartupPath));
 			Log.Info(string.Format("OS: {0}", Environment.OSVersion));
+			Log.Info(string.Format("UserName: {0}", Environment.UserName));
+			Log.Info(string.Format("MachineName: {0}", Environment.MachineName));
+			Log.Info(string.Format("ProcessorCount: {0}", Environment.ProcessorCount));
+			Log.Info(string.Format("CurrentCulture: {0}", Application.CurrentCulture));
+			Log.Info(string.Format("CurrentInputLangugage: {0}", Application.CurrentCulture));
+			Log.Info(string.Format("ClrVersion: {0}", Environment.Version));
 
 
 			Application.EnableVisualStyles();
@@ -79,7 +92,7 @@ namespace HitzgiAddressTool
 			mainForm.ShowDialog();
 			Log.Info("MainForm closed");
 
-			Log.Info("Program terminated after MainForme has been closed");
+			Log.Info("Program terminated after MainForm has been closed");
 		}
 	}
 }
