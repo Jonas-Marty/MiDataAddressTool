@@ -17,7 +17,7 @@ namespace PbsDbWpContactStore.ViewModel
 		    set
 		    {
 			    this._scoutName = value;
-			    OnPropertyChanged("ScoutName");
+			    OnPropertyChanged();
 		    }
 	    }
 
@@ -28,7 +28,7 @@ namespace PbsDbWpContactStore.ViewModel
 			set
 			{
 				this._scoutName = value;
-				OnPropertyChanged("Name");
+				OnPropertyChanged();
 			}
 		}
 
@@ -40,7 +40,7 @@ namespace PbsDbWpContactStore.ViewModel
 			set
 			{
 				this._scoutName = value;
-				OnPropertyChanged("FirstName");
+				OnPropertyChanged();
 			}
 		}
 

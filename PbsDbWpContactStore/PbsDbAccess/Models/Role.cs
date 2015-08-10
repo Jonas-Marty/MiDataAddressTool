@@ -1,19 +1,17 @@
 ﻿using System;
-using Newtonsoft.Json;
 
-namespace PbsDbAccess.JsonWrapperClasses
+namespace PbsDbAccess.Models
 {
 	/// <summary>
-	/// Contains information of a role which the user has. The group where this role aplies is saved in the <see cref="RoleLinksJson"/> property.
+	/// Contains information of a role which the user has.
 	/// </summary>
-	internal class RoleJson
+	public class Role
 	{
 		/// <summary>
 		/// Gets or sets the identifier of the role. This is identifier is unique for every entry.
 		/// </summary>
-		[JsonProperty("id")]
-		internal string Id { get; set; }
-		
+		public string Id { get; set; }
+
 		/// <summary>
 		/// Gets or sets the type of the role. This is a string property which contains a word describing the role. i.g.: "Rover".
 		/// </summary>
@@ -21,20 +19,12 @@ namespace PbsDbAccess.JsonWrapperClasses
 		/// All roles are listed here https://www.dropbox.com/sh/gycyx2r0ookv9du/ZW4_DZLNlb in the document "Funktionen_xx_xxx...".
 		/// Alternatively they are listed in the github repository in the README.rdoc in https://github.com/hitobito/hitobito_pbs.
 		/// </remarks>
-		[JsonProperty("role_type")]
-		internal string RoleType { get; set; }
-		
-		/// <summary>
-		/// Gets or sets the label. It is currently always an empty string.
-		/// </summary>
-		[JsonProperty("label")]
-		internal string Label { get; set; }
+		public string RoleType { get; set; }
 
 		/// <summary>
 		/// Gets or sets the date when this role has been created.
 		/// </summary>
-		[JsonProperty("created_at")]
-		internal DateTime CreatedAt { get; set; }
+		public DateTime CreatedAt { get; set; }
 
 		/// <summary>
 		/// Gets or sets the date when this role has been updated.
@@ -42,19 +32,22 @@ namespace PbsDbAccess.JsonWrapperClasses
 		/// <value>
 		/// The updated at.
 		/// </value>
-		[JsonProperty("updated_at")]
-		internal DateTime UpdatedAt { get; set; }
+		public DateTime UpdatedAt { get; set; }
 
 		/// <summary>
 		/// Gets or sets the date when this role has been deleted. If the is not deleted the value is null.
 		/// </summary>
-		[JsonProperty("deleted_at")]
-		internal DateTime? DeletedAt { get; set; }
+		public DateTime? DeletedAt { get; set; }
 
 		/// <summary>
-		/// Gets or sets the linked role information. It contains the group to where this role belongs.
+		/// Gets or sets the identifier of the group where this role aplies.
 		/// </summary>
-		[JsonProperty("links")]
-		internal RoleLinksJson Links { get; set; }
+		public string Group { get; set; }
+
+		/// <summary>
+		/// Gets or sets the identifier of layer group of the group where this role aplies.
+		/// If the <see cref="Group"/> is a layer group, then this propertey equals to <see cref="Group"/>.
+		/// </summary>
+		public string LayerGroup { get; set; }
 	}
 }

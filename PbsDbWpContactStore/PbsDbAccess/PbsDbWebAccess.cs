@@ -189,7 +189,7 @@ namespace PbsDbAccess
 		/// <returns>The <see cref="Group"/> instance.</returns>
 		private async Task<Group> RecieveGroupByIdAsync(string groupId)
 		{
-			string jsonResponse = await RecieveJsonStringContentAsync(string.Format(UrlConstants.GroupUrlFormatString, groupId));
+			string jsonResponse = await RecieveJsonStringContentAsync(string.Format(UrlConstants.GroupDetailsUrlFormatString, groupId));
 
 			return JsonParser.ParseGroup(jsonResponse);
 		}

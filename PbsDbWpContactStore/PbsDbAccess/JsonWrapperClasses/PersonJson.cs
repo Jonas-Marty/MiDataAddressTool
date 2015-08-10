@@ -3,93 +3,191 @@ using Newtonsoft.Json;
 
 namespace PbsDbAccess.JsonWrapperClasses
 {
-	public class PersonJson
+	/// <summary>
+	/// Contains the information of a person of the PBS Database.
+	/// </summary>
+	internal class PersonJson
 	{
+		/// <summary>
+		/// Gets or sets the identifier.
+		/// </summary>
 		[JsonProperty("id")]
-		public string Id { get; set; }
+		internal string Id { get; set; }
 
+		/// <summary>
+		/// Gets or sets the type. Is always set to "people". 
+		/// </summary>
+		/// <remarks>
+		/// Probably exported just because it exists in their db.
+		/// </remarks>
 		[JsonProperty("type")]
-		public string Type { get; set; }
+		internal string Type { get; set; }
 
+		/// <summary>
+		/// Gets or sets the url to this person.
+		/// </summary>
 		[JsonProperty("href")]
-		public string Href { get; set; }
+		internal string Href { get; set; }
 
+		/// <summary>
+		/// Gets or sets the first name.
+		/// </summary>
 		[JsonProperty("first_name")]
-		public string FirstName { get; set; }
+		internal string FirstName { get; set; }
 
+		/// <summary>
+		/// Gets or sets the last name.
+		/// </summary>
 		[JsonProperty("last_name")]
-		public string LastName { get; set; }
+		internal string LastName { get; set; }
 
+		/// <summary>
+		/// Gets or sets the nickname (scout name, Pfadiname).
+		/// </summary>
 		[JsonProperty("nickname")]
-		public string Nickname { get; set; }
+		internal string Nickname { get; set; }
 
+		/// <summary>
+		/// Gets or sets the name of the company. Praciticaly only set when <see cref="IsCompany"/> is set to <c>true</c>.
+		/// </summary>
 		[JsonProperty("company_name")]
-		public string CompanyName { get; set; }
+		internal string CompanyName { get; set; }
 
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is as company or a person.
+		/// </summary>
 		[JsonProperty("company")]
-		public bool Company { get; set; }
+		internal bool IsCompany { get; set; }
 
+		/// <summary>
+		/// Gets or sets the email. This email is unique in the whole system.
+		/// </summary>
 		[JsonProperty("email")]
-		public string Email { get; set; }
+		internal string Email { get; set; }
 
+		/// <summary>
+		/// Gets or sets the authentication token. Only set in <see cref="UrlConstants.ReadTokenUrl"/> or <see cref="UrlConstants.GenerateTokenUrl"/> response.
+		/// </summary>
 		[JsonProperty("authentication_token")]
-		public string AuthenticationToken { get; set; }
+		internal string AuthenticationToken { get; set; }
 
+		/// <summary>
+		/// Gets or sets the address.
+		/// </summary>
 		[JsonProperty("address")]
-		public string Address { get; set; }
+		internal string Address { get; set; }
 
+		/// <summary>
+		/// Gets or sets the zip code.
+		/// </summary>
 		[JsonProperty("zip_code")]
-		public string ZipCode { get; set; }
+		internal string ZipCode { get; set; }
 
+		/// <summary>
+		/// Gets or sets the town.
+		/// </summary>
 		[JsonProperty("town")]
-		public string Town { get; set; }
+		internal string Town { get; set; }
 
+		/// <summary>
+		/// Gets or sets the country.
+		/// </summary>
 		[JsonProperty("country")]
-		public string Country { get; set; }
+		internal string Country { get; set; }
 
+		/// <summary>
+		/// Gets or sets the url to the picture of the user.
+		/// </summary>
+		/// <remarks>
+		/// Is always set, but it may contains a default picture.
+		/// </remarks>
 		[JsonProperty("picture")]
-		public string Picture { get; set; }
+		internal string Picture { get; set; }
 
+		/// <summary>
+		/// Gets or sets the linked information of this person. It contains: phone numbers, additional emails, roles, creator, updator, primary group identifier.
+		/// In context of a request for all persons of a group, the creator, updator and primary group identifier wil not be set.
+		/// </summary>
 		[JsonProperty("links")]
-		public PersonLinksJson Links { get; set; }
+		internal PersonLinksJson Links { get; set; }
 
+		/// <summary>
+		/// Gets or sets the birthday. Only set in request to <see cref="UrlConstants.PersonDetailsUrlFormatString"/>.
+		/// </summary>
 		[JsonProperty("birthday")]
-		public string Birthday { get; set; }
+		internal DateTime? Birthday { get; set; }
 
+		/// <summary>
+		/// Gets or sets the gender. "m" is for male and "w" for woman. An empty string stands for "Unknown".
+		/// </summary>
 		[JsonProperty("gender")]
-		public string Gender { get; set; }
+		internal string Gender { get; set; }
 
+		/// <summary>
+		/// Gets or sets the additional information.
+		/// </summary>
 		[JsonProperty("additional_information")]
-		public string AdditionalInformation { get; set; }
+		internal string AdditionalInformation { get; set; }
 
+		/// <summary>
+		/// Gets or sets the PBS number. This number is generated from the PBS database.
+		/// </summary>
 		[JsonProperty("pbs_number")]
-		public string PbsNumber { get; set; }
+		internal string PbsNumber { get; set; }
 
+		/// <summary>
+		/// Gets or sets the J+S number. This number is fount on a J+S identification card that you get when you make a leader course.
+		/// </summary>
 		[JsonProperty("j_s_number")]
-		public string JsNumber { get; set; }
+		internal string JsNumber { get; set; }
 
+		/// <summary>
+		/// Gets or sets the salutation value.
+		/// </summary>
 		[JsonProperty("salutation_value")]
-		public string SalutationValue { get; set; }
+		internal string SalutationValue { get; set; }
 
+		/// <summary>
+		/// Gets or sets the correspondence language.
+		/// </summary>
 		[JsonProperty("correspondence_language")]
-		public string CorrespondenceLanguage { get; set; }
+		internal string CorrespondenceLanguage { get; set; }
 
+		/// <summary>
+		/// Gets or sets the grade of school.
+		/// </summary>
 		[JsonProperty("grade_of_school")]
-		public object GradeOfSchool { get; set; }
+		internal string GradeOfSchool { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this person has brothers and sisters ins the pfadi.
+		/// </summary>
 		[JsonProperty("brother_and_sisters")]
-		public bool HasBrotherAndSisters { get; set; }
+		internal bool HasBrotherAndSisters { get; set; }
 
+		/// <summary>
+		/// Gets or sets the entry date.
+		/// </summary>
 		[JsonProperty("entry_date")]
-		public string EntryDate { get; set; }
+		internal DateTime? EntryDate { get; set; }
 
+		/// <summary>
+		/// Gets or sets the leaving date.
+		/// </summary>
 		[JsonProperty("leaving_date")]
-		public object LeavingDate { get; set; }
+		internal DateTime? LeavingDate { get; set; }
 
+		/// <summary>
+		/// Gets or sets the datetime when this person was created.
+		/// </summary>
 		[JsonProperty("created_at")]
-		public DateTime CreatedAt { get; set; }
+		internal DateTime CreatedAt { get; set; }
 
+		/// <summary>
+		/// Gets or sets the datetime when this person was updated last.
+		/// </summary>
 		[JsonProperty("updated_at")]
-		public DateTime UpdatedAt { get; set; }
+		internal DateTime UpdatedAt { get; set; }
 	}
 }

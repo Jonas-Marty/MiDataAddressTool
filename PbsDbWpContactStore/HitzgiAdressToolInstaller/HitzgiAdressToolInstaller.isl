@@ -2649,7 +2649,9 @@
 		<row><td>COMPANY_NAME</td><td>1031</td><td>Pfadi Arth-Goldau</td><td>0</td><td/><td>321106699</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1031</td><td>Immer installieren</td><td>0</td><td/><td>321112779</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1031</td><td>Die Farbeinstellungen Ihres Systems sind zum Ausführen von [ProductName] nicht geeignet.</td><td>0</td><td/><td>321112779</td></row>
-		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION45FULL</td><td>1031</td><td>Microsoft .NET Framework 4.5 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>321112779</td></row>
+		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION40CLIENT</td><td>1031</td><td>Microsoft .NET Framework 4.0 Client Package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>1126371447</td></row>
+		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION40CLIENT</td><td>1033</td><td>Microsoft .NET Framework 4.0 Client Package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>1126369399</td></row>
+		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION45FULL</td><td>1031</td><td>Microsoft .NET Framework 4.5 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>1126420567</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_OS</td><td>1031</td><td>Das Betriebssystem ist zum Ausführen von [ProductName] nicht geeignet.</td><td>0</td><td/><td>321112779</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_PROCESSOR</td><td>1031</td><td>Der Prozessor ist für zum Ausführen von [ProductName] nicht geeignet.</td><td>0</td><td/><td>321112779</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_RAM</td><td>1031</td><td>Der Arbeitsspeicher (RAM) ist zum Ausführen von [ProductName] nicht ausreichend.</td><td>0</td><td/><td>321112779</td></row>

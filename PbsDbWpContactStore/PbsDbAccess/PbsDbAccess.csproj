@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\PbsDbAccess.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="InvalidLoginInformationException.cs" />
@@ -39,14 +40,18 @@
     <Compile Include="JsonWrapperClasses\AdditionalEmailJson.cs" />
     <Compile Include="JsonWrapperClasses\GroupJson.cs" />
     <Compile Include="JsonWrapperClasses\LinkedJson.cs" />
-    <Compile Include="JsonWrapperClasses\LinksJson.cs" />
+    <Compile Include="JsonWrapperClasses\GrouplinksJson.cs" />
     <Compile Include="JsonWrapperClasses\PersonLinksJson.cs" />
     <Compile Include="JsonWrapperClasses\PersonJson.cs" />
     <Compile Include="JsonWrapperClasses\PhoneNumberJson.cs" />
     <Compile Include="JsonWrapperClasses\RoleJson.cs" />
+    <Compile Include="JsonWrapperClasses\RoleLinksJson.cs" />
     <Compile Include="JsonWrapperClasses\RootObjectJson.cs" />
+    <Compile Include="Models\AdditionalEmail.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\PhoneNumber.cs" />
+    <Compile Include="Models\Role.cs" />
     <Compile Include="PbsDbWebAccess.cs" />
     <Compile Include="LoggedInUserInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

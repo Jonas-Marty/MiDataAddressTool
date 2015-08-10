@@ -1,22 +1,18 @@
-﻿using Newtonsoft.Json;
-
-namespace PbsDbAccess.JsonWrapperClasses
+﻿namespace PbsDbAccess.Models
 {
 	/// <summary>
 	/// Contains information about a phone number.
 	/// </summary>
-	internal class PhoneNumberJson
+	public class PhoneNumber
 	{
 		/// <summary>
 		/// Gets or sets the unique identifier.
 		/// </summary>
-		[JsonProperty("id")]
 		internal string Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the number.
 		/// </summary>
-		[JsonProperty("number")]
 		internal string Number { get; set; }
 
 		/// <summary>
@@ -25,7 +21,6 @@ namespace PbsDbAccess.JsonWrapperClasses
 		/// <example>
 		/// Possible values are: Mobil, Arbeit, Vater, Mutter, Fax, Andere, Mobile and their translation to Italian an France.
 		/// </example>
-		[JsonProperty("label")]
 		internal string Label { get; set; }
 
 		/// <summary>
@@ -33,7 +28,6 @@ namespace PbsDbAccess.JsonWrapperClasses
 		/// If it is set to <c>true</c> everyone with read rights can see the number, 
 		/// otherwise only persons in the same group can see the number.
 		/// </summary>
-		[JsonProperty("_public")]
 		internal bool IsPublic { get; set; }
 	}
 }

@@ -15,6 +15,9 @@ namespace PbsDbAccess
 	{
 		private static readonly JsonSerializer JsonSerializer;
 
+		/// <summary>
+		/// Initializes the <see cref="JsonSerializer"/> property
+		/// </summary>
 		static JsonParser()
 		{
 			var serializerSettings = new JsonSerializerSettings
@@ -61,11 +64,11 @@ namespace PbsDbAccess
 			Group group = new Group
 			{
 				Id = root.Groups[0].Id,
-				IsLayerGroup = root.Groups[0].Layer,
+				IsLayerGroup = root.Groups[0].IsLayerGroup,
 				Name = root.Groups[0].Name,
-				ParentGroupId = root.Groups[0].Links.ParentGroup,
-				LayerGroupId = root.Groups[0].Links.LayerGroup,
-				ChildGroupIds = root.Groups[0].Links.Children
+				ParentGroupId = root.Groups[0].Grouplinks.ParentGroup,
+				LayerGroupId = root.Groups[0].Grouplinks.LayerGroup,
+				ChildGroupIds = root.Groups[0].Grouplinks.Children
 			};
 
 			return group;
@@ -83,13 +86,12 @@ namespace PbsDbAccess
 			return root.People.Select(person => new Person
 			{
 				Id = person.Id,
-				Type = person.Type,
 				Href = person.Href,
 				FirstName = person.FirstName,
 				LastName = person.LastName,
 				Nickname = person.Nickname,
 				CompanyName = person.CompanyName,
-				Company = person.Company,
+				IsCompany = person.IsCompany,
 				Email = person.Email,
 				AuthenticationToken = person.AuthenticationToken,
 				Address = person.Address,
@@ -97,7 +99,6 @@ namespace PbsDbAccess
 				Town = person.Town,
 				Country = person.Country,
 				Picture = person.Picture,
-				Links = person.Links,
 				Birthday = person.Birthday,
 				Gender = person.Gender,
 				AdditionalInformation = person.AdditionalInformation,
@@ -110,7 +111,13 @@ namespace PbsDbAccess
 				EntryDate = person.EntryDate,
 				LeavingDate = person.LeavingDate,
 				CreatedAt = person.CreatedAt,
-				UpdatedAt = person.UpdatedAt
+				UpdatedAt = person.UpdatedAt,
+				Updater = person.Links.Updater,
+				Creator = person.Links.Creator,
+				PrimaryGroup = person.Links.PrimaryGroup,
+				PhoneNumbers = ParsePhoneNumbers(root, person),
+				AdditionalEmails = ParseAdditionalEmails(root, person),
+				Roles = ParseRoles(root, person)
 			});
 		}
 
@@ -123,6 +130,58 @@ namespace PbsDbAccess
 		internal static RootObjectJson DesierializeRootObject(string jsonString)
 		{
 			return JsonSerializer.Deserialize<RootObjectJson>(new JsonTextReader(new StringReader(jsonString)));
+		}
+
+		private static IEnumerable<Role> ParseRoles(RootObjectJson root, PersonJson person)
+		{
+			//No ned to check if user has roles, he must have at least one to be returned.
+			return root.Linked.Roles
+				.Where(role => person.Links.Roles.Any(roleId => roleId == role.Id))
+				.Select(role => new Role
+				{
+					Id = role.Id,
+					CreatedAt = role.CreatedAt,
+					DeletedAt = role.DeletedAt,
+					RoleType = role.RoleType,
+					UpdatedAt = role.UpdatedAt,
+					Group = role.Links.Group,
+					LayerGroup = role.Links.LayerGroup
+				});
+		}
+
+		private static IEnumerable<AdditionalEmail> ParseAdditionalEmails(RootObjectJson root, PersonJson person)
+		{
+			if (person.Links.AdditionalEmails != null)
+			{
+				return root.Linked.AdditionalEmail
+						.Where(additionalEmail => person.Links.AdditionalEmails.Any(additionalEmailId => additionalEmailId == additionalEmail.Id))
+						.Select(additionalEmail => new AdditionalEmail
+						{
+							Id = additionalEmail.Id,
+							Email = additionalEmail.Email,
+							Label = additionalEmail.Label,
+							IsPublic = additionalEmail.IsPublic,
+							Mailings = additionalEmail.Mailings
+						});
+			}
+			return Enumerable.Empty<AdditionalEmail>();
+		}
+
+		private static IEnumerable<PhoneNumber> ParsePhoneNumbers(RootObjectJson root, PersonJson person)
+		{
+			if (person.Links.PhoneNumbers != null)
+			{
+				return root.Linked.PhoneNumbers
+						.Where(phoneNumber => person.Links.PhoneNumbers.Any(phoneNumberId => phoneNumberId == phoneNumber.Id))
+						.Select(phoneNumber => new PhoneNumber
+						{
+							Id = phoneNumber.Id,
+							Number = phoneNumber.Number,
+							Label = phoneNumber.Label,
+							IsPublic = phoneNumber.IsPublic
+						});
+			}
+			return Enumerable.Empty<PhoneNumber>();
 		}
 	}
 }
