@@ -6,28 +6,29 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-		DataContext="{StaticResource PersonViewModel}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-	<Grid>
-		<StackPanel x:Name="TitlePanel">
-			<TextBlock Text="{Binding Path=PersonScoutName}"
-                Style="{StaticResource BodyTextBlockStyle}"
-                Margin="12,0"/>
-			<TextBlock Text="{Binding Path=PersonFirstName}"
-                Style="{StaticResource TitleTextBlockStyle}"
-                Margin="9,-7,0,0" />
-			<TextBlock Text="{Binding Path=PersonName}"
-                Style="{StaticResource TitleTextBlockStyle}"
-                Margin="9,-7,0,0" />
-		</StackPanel>
-		<ListBox x:Name="PeobleListBox"
-						 ItemsSource="{Binding Path=PeopleCollection}">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<TextBlock Text="{Binding ScoutName}" />
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
-	</Grid>
+  <Grid>
+    <Pivot Title="PBS Database">
+      <PivotItem>
+        <StackPanel>
+          <TextBlock Style="{ThemeResource BaseTextBlockStyle}">Email</TextBlock>
+          <TextBox x:Name="emailTextBox"
+									 PlaceholderText="email@example.com"
+									 IsTextPredictionEnabled="False"/>
+          <TextBlock Style="{ThemeResource BaseTextBlockStyle}">Passwort</TextBlock>
+          <PasswordBox x:Name="passwordBox" PlaceholderText="e.g. xd3ç%;Dk"></PasswordBox>
+          <Button x:Name="loginButton" 
+									HorizontalAlignment="Stretch" 
+									Click="loginButton_Click">Login</Button>
+          <ProgressBar x:Name="loginProgressBar" 
+											 Visibility="Collapsed" 
+											 IsIndeterminate="True"/>
+          <TextBlock x:Name="statusTextBlock" 
+										 Style="{ThemeResource BaseTextBlockStyle}"
+										 Visibility="Collapsed"/>
+        </StackPanel>
+      </PivotItem>
+    </Pivot>
+  </Grid>
 </Page>
