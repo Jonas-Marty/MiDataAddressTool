@@ -7,27 +7,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+  <Page.BottomAppBar>
+    <CommandBar >
+      <AppBarButton x:Name="settingAppBarButton" Icon="Setting" Label="Einstellungen" Click="settingAppBarButton_OnClick"/>
+    </CommandBar>
+  </Page.BottomAppBar>
 
   <Grid>
-    <Pivot Title="PBS Database">
-      <PivotItem>
-        <StackPanel>
-          <TextBlock Style="{ThemeResource BaseTextBlockStyle}">Email</TextBlock>
-          <TextBox x:Name="emailTextBox"
-									 PlaceholderText="email@example.com"
-									 IsTextPredictionEnabled="False"/>
-          <TextBlock Style="{ThemeResource BaseTextBlockStyle}">Passwort</TextBlock>
-          <PasswordBox x:Name="passwordBox" PlaceholderText="e.g. xd3ç%;Dk"></PasswordBox>
-          <Button x:Name="loginButton" 
-									HorizontalAlignment="Stretch" 
-									Click="loginButton_Click">Login</Button>
-          <ProgressBar x:Name="loginProgressBar" 
-											 Visibility="Collapsed" 
-											 IsIndeterminate="True"/>
-          <TextBlock x:Name="statusTextBlock" 
-										 Style="{ThemeResource BaseTextBlockStyle}"
-										 Visibility="Collapsed"/>
-        </StackPanel>
+    <Pivot>
+      <PivotItem Header="akela">
+        
+      </PivotItem>
+      <PivotItem Header="pegapeia">
+
       </PivotItem>
     </Pivot>
   </Grid>

@@ -22,7 +22,7 @@ namespace PbsDbAccess
 		/// <summary>
 		/// The base URL for all urls.
 		/// </summary>
-		public const string BaseUrl = "https://db.scout.ch/";
+		public const string BaseUrl = "https://db.scout.ch/de/";
 
 		#region Login
 
