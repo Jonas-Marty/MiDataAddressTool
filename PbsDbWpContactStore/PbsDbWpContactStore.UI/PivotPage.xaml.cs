@@ -16,9 +16,9 @@ namespace PbsDbWpContactStore.UI
         private const string FirstGroupName = "FirstGroup";
         private const string SecondGroupName = "SecondGroup";
 
-        private readonly NavigationHelper navigationHelper;
-        private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
-        private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
+        private readonly NavigationHelper _navigationHelper;
+        private readonly ObservableDictionary _defaultViewModel = new ObservableDictionary();
+        private readonly ResourceLoader _resourceLoader = ResourceLoader.GetForCurrentView("Resources");
 
         public PivotPage()
         {
@@ -26,9 +26,9 @@ namespace PbsDbWpContactStore.UI
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
-            this.navigationHelper = new NavigationHelper(this);
-            this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
-            this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+            this._navigationHelper = new NavigationHelper(this);
+            this._navigationHelper.LoadState += this.NavigationHelper_LoadState;
+            this._navigationHelper.SaveState += this.NavigationHelper_SaveState;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace PbsDbWpContactStore.UI
         /// </summary>
         public NavigationHelper NavigationHelper
         {
-            get { return this.navigationHelper; }
+            get { return this._navigationHelper; }
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace PbsDbWpContactStore.UI
         /// </summary>
         public ObservableDictionary DefaultViewModel
         {
-            get { return this.defaultViewModel; }
+            get { return this._defaultViewModel; }
         }
 
         /// <summary>
@@ -89,10 +89,10 @@ namespace PbsDbWpContactStore.UI
             var nextItemId = group.Items.Count + 1;
             var newItem = new SampleDataItem(
                 string.Format(CultureInfo.InvariantCulture, "Group-{0}-Item-{1}", this.pivot.SelectedIndex + 1, nextItemId),
-                string.Format(CultureInfo.CurrentCulture, this.resourceLoader.GetString("NewItemTitle"), nextItemId),
+                string.Format(CultureInfo.CurrentCulture, this._resourceLoader.GetString("NewItemTitle"), nextItemId),
                 string.Empty,
                 string.Empty,
-                this.resourceLoader.GetString("NewItemDescription"),
+                this._resourceLoader.GetString("NewItemDescription"),
                 string.Empty);
 
             group.Items.Add(newItem);
@@ -113,7 +113,7 @@ namespace PbsDbWpContactStore.UI
             var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
             if (!Frame.Navigate(typeof(ItemPage), itemId))
             {
-                throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
+                throw new Exception(this._resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
         }
 
@@ -143,12 +143,12 @@ namespace PbsDbWpContactStore.UI
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            this.navigationHelper.OnNavigatedTo(e);
+            this._navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            this.navigationHelper.OnNavigatedFrom(e);
+            this._navigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion

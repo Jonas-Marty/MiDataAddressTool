@@ -1,43 +1,68 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using PbsDbAccess.Models;
+using PbsDbWpContactStore.View.Common;
+using PbsDbWpContactStore.View.Model;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
 namespace PbsDbWpContactStore.View
 {
-	/// <summary>
-	/// An empty page that can be used on its own or navigated to within a Frame.
-	/// </summary>
-	public sealed partial class MainPage
-	{
-		public MainPage()
-		{
-			this.InitializeComponent();
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class MainPage
+    {
+        private List<Person> People { get; set; }
 
-			this.NavigationCacheMode = NavigationCacheMode.Required;
-		}
+        private List<Group> Groups { get; set; }
 
-		/// <summary>
-		/// Invoked when this page is about to be displayed in a Frame.
-		/// </summary>
-		/// <param name="e">Event data that describes how this page was reached.
-		/// This parameter is typically used to configure the page.</param>
-		protected override void OnNavigatedTo(NavigationEventArgs e)
-		{
-			// TODO: Prepare page for display here.
+        private const string GroupsName = "Groups";
 
-			// TODO: If your application contains multiple pages, ensure that you are
-			// handling the hardware Back button by registering for the
-			// Windows.Phone.UI.Input.HardwareButtons.BackPressed event.
-			// If you are using the NavigationHelper provided by some templates,
-			// this event is handled for you.
+        public MainPage()
+        {
+            this.InitializeComponent();
+        }
 
-		}
+        protected override async void LoadState(object sender, LoadStateEventArgs e)
+        {
+            await LoadData();
+        }
 
-		private void settingAppBarButton_OnClick(object sender, RoutedEventArgs e)
-		{
-			throw new System.NotImplementedException();
-		}
-	}
+        private async Task LoadData()
+        {
+            People = await DataManager.LoadPeopleAsync();
+            Groups = await DataManager.LoadGroupsAsync();
+
+            Debug.WriteLine($"{People.Count} Personen aus Speicher geladen");
+
+            var personGroupeRoles =
+                People.SelectMany(person => person.Roles.Select(role => new { Person = person, Group = role.Group }));
+
+            var groupsWithPeople = Groups.Select(group => new GroupWithPeopleModel
+            {
+                Group = group.Name,
+                People = new ObservableCollection<Person>(
+                    personGroupeRoles.Where(personGroupRole => personGroupRole.Group == group.Id)
+                        .Select(personGroupeRole => personGroupeRole.Person)
+                    )
+            });
+
+            DefaultViewModel[GroupsName] = new MainPageViewModel { GroupsWithPeople = new ObservableCollection<GroupWithPeopleModel>(groupsWithPeople) };
+        }
+
+        protected override void SaveState(object sender, SaveStateEventArgs e)
+        {
+        }
+        
+        private void settingAppBarButton_OnClick(object sender, RoutedEventArgs e)
+        {
+        }
+    }
 }

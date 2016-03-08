@@ -1,26 +1,13 @@
-﻿using PbsDbWpContactStore.View.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
-using Windows.Phone.PersonalInformation;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Navigation;
-using MoreLinq;
 using PbsDbAccess;
 using PbsDbAccess.Models;
+using PbsDbWpContactStore.View.Common;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -31,29 +18,43 @@ namespace PbsDbWpContactStore.View
 	/// </summary>
 	public sealed partial class DownloadPage
 	{
-		public DownloadPage()
+	    public DownloadPage()
 		{
 			InitializeComponent();
 		}
 
-		protected override void LoadState(object sender, LoadStateEventArgs e)
-		{
-			PbsDbWebAccess access = e.NavigationParameter as PbsDbWebAccess;
-			if (access != null)
-			{
-				var task = DownloadData(access);
-				task.ContinueWith((t) => Frame.Navigate(typeof (MainPage))); //Todo check for errors in t
-			}
-		}
+	    protected override void OnNavigatedTo(NavigationEventArgs e)
+	    {
+	        base.OnNavigatedTo(e);
+            PbsDbWebAccess access = e.Parameter as PbsDbWebAccess;
+            if (access != null)
+            {
+                var task = DownloadData(access);
+                task.ContinueWith(async t =>
+                {
+                    if (!t.IsFaulted)
+                    {
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(MainPage)));
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Download failed, do something here");
+                    }
+                }); //Todo check for errors in t
+            }
+        }
 
-		protected override void SaveState(object sender, SaveStateEventArgs e)
+	    protected override void LoadState(object sender, LoadStateEventArgs e)
+	    {
+	    }
+
+	    protected override void SaveState(object sender, SaveStateEventArgs e)
 		{
-			throw new NotImplementedException();
 		}
 
 		private async Task DownloadData(PbsDbWebAccess pbsDbAccess)
 		{
-			var groups = await pbsDbAccess.RecieveAllGroupsFromLayerGroupRecursiveAsync();
+			var groups = (await pbsDbAccess.RecieveAllGroupsFromLayerGroupRecursiveAsync()).ToList();
 
 			List<Person> people = new List<Person>();
 
@@ -79,10 +80,11 @@ namespace PbsDbWpContactStore.View
 				Debug.WriteLine($"Personen von {group.Name} geladen");
 			}
 
-			Debug.WriteLine("Personen laden abgeschlossen");
+		    Debug.WriteLine("Personen laden abgeschlossen");
 			
-			await DataManager.SaveContacts(people);
-			await ContactManager.SetContacts(people);
+			await DataManager.SaveGroupsAsync(groups.ToList());
+			await DataManager.SavePeopleAsync(people);
+			await ContactManager.SetContactsAsync(people);
 
 			Debug.WriteLine("Alle Kontakte dem ContactStore hinzugefügt");
 		}
