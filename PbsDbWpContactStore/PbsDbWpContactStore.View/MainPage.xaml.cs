@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Controls;
 using PbsDbAccess.Models;
 using PbsDbWpContactStore.View.Common;
 using PbsDbWpContactStore.View.Model;
@@ -27,7 +26,7 @@ namespace PbsDbWpContactStore.View
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         protected override async void LoadState(object sender, LoadStateEventArgs e)
@@ -35,20 +34,31 @@ namespace PbsDbWpContactStore.View
             await LoadData();
         }
 
+        protected override void SaveState(object sender, SaveStateEventArgs e)
+        {
+        }
+
         private async Task LoadData()
         {
+            if (!await DataManager.DetermineIfSavedPeopleAreExistingAsync())
+            {
+                Frame.Navigate(typeof (LoginPage));
+                return;
+            }
             People = await DataManager.LoadPeopleAsync();
             Groups = await DataManager.LoadGroupsAsync();
 
             Debug.WriteLine($"{People.Count} Personen aus Speicher geladen");
 
             var personGroupeRoles =
-                People.SelectMany(person => person.Roles.Select(role => new { Person = person, Group = role.Group }));
+                People
+                    .Select(person => new PersonViewModel(person))
+                    .SelectMany(person => person.Roles.Select(role => new { Person = person, Group = role.Group }));
 
             var groupsWithPeople = Groups.Select(group => new GroupWithPeopleModel
             {
                 Group = group.Name,
-                People = new ObservableCollection<Person>(
+                People = new ObservableCollection<PersonViewModel>(
                     personGroupeRoles.Where(personGroupRole => personGroupRole.Group == group.Id)
                         .Select(personGroupeRole => personGroupeRole.Person)
                     )
@@ -57,12 +67,13 @@ namespace PbsDbWpContactStore.View
             DefaultViewModel[GroupsName] = new MainPageViewModel { GroupsWithPeople = new ObservableCollection<GroupWithPeopleModel>(groupsWithPeople) };
         }
 
-        protected override void SaveState(object sender, SaveStateEventArgs e)
-        {
-        }
-        
         private void settingAppBarButton_OnClick(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void ListViewBase_OnItemClick(object sender, ItemClickEventArgs e)
+        {
+            Frame.Navigate(typeof (ContactPage), e.ClickedItem);
         }
     }
 }

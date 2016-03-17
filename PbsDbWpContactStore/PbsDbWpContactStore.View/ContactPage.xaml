@@ -1,0 +1,70 @@
+﻿<common:BasePage
+    x:Class="PbsDbWpContactStore.View.ContactPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PbsDbWpContactStore.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:common="using:PbsDbWpContactStore.View.Common"
+    mc:Ignorable="d"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="LayoutRoot" DataContext="{Binding Person}">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="PBS Database" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="{Binding DisplayName}" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <StackPanel>
+                <ItemsControl x:Name="phoneNumberListBox" ItemsSource="{Binding PhoneNumbers}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="{Binding Label}" />
+                                <Button Click="PhoneNumberButton_OnClick" Content="{Binding Number}" BorderThickness="0" Foreground="{ThemeResource PhoneAccentBrush}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}">Hauptemail</TextBlock>
+                <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="{Binding Email}" />
+
+                <ItemsControl x:Name="additionalEmailsListBox" ItemsSource="{Binding AdditionalEmails}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="{Binding Label}" />
+                                <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="{Binding Email}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Adresse" />
+                <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="{Binding Address}" />
+                <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="{Binding ZipCodeTown}" />
+                
+                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Geburtstag" />
+                <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="{Binding Birthday}" />
+
+                <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="PBS DB link" />
+                <TextBlock Style="{ThemeResource BodyTextBlockStyle}" Text="{Binding Href}" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</common:BasePage>

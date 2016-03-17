@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using PbsDbAccess.JsonWrapperClasses;
 
 namespace PbsDbAccess.Models
 {
-	/// <summary>
-	/// Contains the information of a person of the PBS Database.
-	/// </summary>
-	public class Person
+    /// <summary>
+    /// Contains the information of a person of the PBS Database.
+    /// </summary>
+    [DebuggerDisplay("Person: {Id} - {FirstName} - {LastName} - {Nickname}")]
+    public class Person
 	{
 		/// <summary>
 		/// Gets or sets the identifier.

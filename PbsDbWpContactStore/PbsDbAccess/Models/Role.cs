@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace PbsDbAccess.Models
 {
-	/// <summary>
-	/// Contains information of a role which the user has.
-	/// </summary>
-	public class Role
+    /// <summary>
+    /// Contains information of a role which the user has.
+    /// </summary>
+    [DebuggerDisplay("Role: {Id} - GroupId:{Group}")]
+    public class Role
 	{
 		/// <summary>
 		/// Gets or sets the identifier of the role. This is identifier is unique for every entry.

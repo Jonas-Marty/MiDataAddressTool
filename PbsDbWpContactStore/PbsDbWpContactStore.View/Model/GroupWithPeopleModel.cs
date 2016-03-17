@@ -7,6 +7,6 @@ namespace PbsDbWpContactStore.View.Model
     {
         public string Group { get; set; }
 
-        public ObservableCollection<Person> People { get; set; }
+        public ObservableCollection<PersonViewModel> People { get; set; }
     }
 }

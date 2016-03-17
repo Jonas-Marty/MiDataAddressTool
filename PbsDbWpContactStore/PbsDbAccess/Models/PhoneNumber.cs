@@ -1,9 +1,12 @@
-﻿namespace PbsDbAccess.Models
+﻿using System.Diagnostics;
+
+namespace PbsDbAccess.Models
 {
-	/// <summary>
-	/// Contains information about a phone number.
-	/// </summary>
-	public class PhoneNumber
+    /// <summary>
+    /// Contains information about a phone number.
+    /// </summary>
+    [DebuggerDisplay("PhoneNumber: {Id} - {Number}")]
+    public class PhoneNumber
 	{
 		/// <summary>
 		/// Gets or sets the unique identifier.

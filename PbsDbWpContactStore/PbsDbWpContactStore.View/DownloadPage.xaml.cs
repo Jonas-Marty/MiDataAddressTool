@@ -34,7 +34,7 @@ namespace PbsDbWpContactStore.View
                 {
                     if (!t.IsFaulted)
                     {
-                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(MainPage)));
+                        await Dispatcher.RunAsync(CoreDispatcherPriority.High, () => Frame.Navigate(typeof(MainPage)));
                     }
                     else
                     {

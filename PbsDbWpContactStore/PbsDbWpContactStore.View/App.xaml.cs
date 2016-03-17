@@ -62,7 +62,7 @@ namespace PbsDbWpContactStore.View
                 rootFrame = new Frame();
 
                 // TODO: change this value to a cache size that is appropriate for your application
-                rootFrame.CacheSize = 1;
+                rootFrame.CacheSize = 2;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -99,7 +99,7 @@ namespace PbsDbWpContactStore.View
                         throw new Exception("Failed to create initial page");
                     }
                 }
-                if (!rootFrame.Navigate(typeof(LoginPage), e.Arguments))
+                else if (!rootFrame.Navigate(typeof(LoginPage), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }

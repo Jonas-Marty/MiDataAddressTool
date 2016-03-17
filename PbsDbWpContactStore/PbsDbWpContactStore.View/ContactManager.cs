@@ -27,9 +27,13 @@ namespace PbsDbWpContactStore.View
             {
                 StoredContact contact = new StoredContact(contactStore);
                 var properties = await contact.GetPropertiesAsync();
+                var extendedProperties = await contact.GetExtendedPropertiesAsync();
+
                 properties.Add(KnownContactProperties.Nickname, person.Nickname);
                 properties.Add(KnownContactProperties.FamilyName, person.LastName);
                 properties.Add(KnownContactProperties.GivenName, person.FirstName);
+                properties.Add(KnownContactProperties.DisplayName, $"{person.FirstName} {person.LastName} v/o {person.Nickname}");
+                properties.Add(KnownContactProperties.Email, person.Email);
                 properties.Add(KnownContactProperties.Address, new ContactAddress
                 {
                     Country = person.Country ?? string.Empty,
@@ -42,7 +46,12 @@ namespace PbsDbWpContactStore.View
                     properties.Add(KnownContactProperties.Birthdate, new DateTimeOffset(person.Birthday.Value));
 
                 }
-                properties.Add(KnownContactProperties.DisplayName, $"{person.FirstName} {person.LastName} v/o {person.Nickname}");
+
+                var additionEmail = person.AdditionalEmails.FirstOrDefault()?.Email;
+                if (additionEmail != null)
+                {
+                    properties.Add(KnownContactProperties.OtherEmail, additionEmail);
+                }
 
                 //TODO: Replace magic strings
                 string homeNumber = person.PhoneNumbers.FirstOrDefault(number => number.Label == NameOfHomeNumberField)?.Number;
@@ -63,15 +72,6 @@ namespace PbsDbWpContactStore.View
                 {
                     properties.Add(KnownContactProperties.WorkTelephone, companyNumer);
                 }
-
-                properties.Add(KnownContactProperties.Email, person.Email);
-                var additionEmail = person.AdditionalEmails.FirstOrDefault();
-                if (additionEmail != null)
-                {
-                    properties.Add(KnownContactProperties.OtherEmail, additionEmail);
-                }
-                var extendedProperties = await contact.GetExtendedPropertiesAsync();
-
                 if (motherNumber != null)
                 {
                     extendedProperties.Add("Telefon Mutter", motherNumber);

@@ -30,12 +30,13 @@
         <!--TODO: Content should be placed within the following grid-->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel>
-                <TextBlock Style="{ThemeResource BaseTextBlockStyle}">Email</TextBlock>
                 <TextBox x:Name="emailTextBox"
 					PlaceholderText="email@example.com"
-					IsTextPredictionEnabled="False"/>
-                <TextBlock Style="{ThemeResource BaseTextBlockStyle}">Passwort</TextBlock>
-                <PasswordBox x:Name="passwordBox" PlaceholderText="e.g. xd3ç%;Dk"/>
+					IsTextPredictionEnabled="False"
+                    Header="Email"/>
+                <PasswordBox x:Name="passwordBox"
+                    PlaceholderText="e.g. xd3ç%;Dk"
+                    Header="Password"/>
                 <Button x:Name="loginButton" 
 					HorizontalAlignment="Stretch" 
 					Click="loginButton_Click">Login</Button>
@@ -43,7 +44,7 @@
 					Visibility="Collapsed" 
 					IsIndeterminate="True"/>
                 <TextBlock x:Name="statusTextBlock" 
-					Style="{ThemeResource BaseTextBlockStyle}"
+					Style="{StaticResource MessageDialogContentStyle}"
 					Visibility="Collapsed"/>
             </StackPanel>
         </Grid>

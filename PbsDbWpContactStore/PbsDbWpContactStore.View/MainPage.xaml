@@ -10,7 +10,7 @@
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.BottomAppBar>
-        <CommandBar >
+        <CommandBar>
             <AppBarButton x:Name="settingAppBarButton" Icon="Setting" Label="Einstellungen" Click="settingAppBarButton_OnClick"/>
         </CommandBar>
     </Page.BottomAppBar>
@@ -28,7 +28,7 @@
                         <ListView
                             ItemsSource="{Binding People}"
                             IsItemClickEnabled="True"
-                            ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                            ContinuumNavigationTransitionInfo.ExitElementContainer="True" ItemClick="ListViewBase_OnItemClick">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,0,0,9.5">

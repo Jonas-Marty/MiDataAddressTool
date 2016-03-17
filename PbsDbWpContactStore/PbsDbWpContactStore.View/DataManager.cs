@@ -44,36 +44,32 @@ namespace PbsDbWpContactStore.View
 
         private static async Task<T> LoadAndDeserealizeAsync<T>(string fileName) where T : class
         {
-            StorageFile file =
-                   await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
-            DataContractJsonSerializer serializer = GetSerializer<T>();
-
-            using (var stream = await file.OpenStreamForReadAsync())
-            { 
-                var readObject = serializer.ReadObject(stream);
-                return readObject as T;
+            using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForReadAsync(fileName))
+            {
+                return CreateSerializer<T>().ReadObject(stream) as T;
             }
         }
 
         private static async Task SerializeAndSaveToFileAsync<T>(string fileName, T objectToSave)
         {
-            StorageFile contactsFile =
-                await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName,
-                    CreationCollisionOption.ReplaceExisting);
-
-            using (var stream = await contactsFile.OpenStreamForWriteAsync())
+            using (var stream = await ApplicationData.Current.LocalFolder.OpenStreamForWriteAsync(fileName, CreationCollisionOption.ReplaceExisting))
             {
-                DataContractJsonSerializer serializer = GetSerializer<T>();
-                serializer.WriteObject(stream, objectToSave);
+                CreateSerializer<T>().WriteObject(stream, objectToSave);
             }
         }
 
-        private static DataContractJsonSerializer GetSerializer<T>()
+        private static DataContractJsonSerializer CreateSerializer<T>()
         {
             return new DataContractJsonSerializer(typeof(T));
         }
 
         public static async Task<bool> DetermineIfSavedCredentialsAreExistingAsync()
+        {
+            return (await ApplicationData.Current.LocalFolder.GetFilesAsync())
+                .Any(file => file.Name.Equals(FileNames.UserCredentialsFileName));
+        }
+
+        public static async Task<bool> DetermineIfSavedPeopleAreExistingAsync()
         {
             return (await ApplicationData.Current.LocalFolder.GetFilesAsync())
                 .Any(file => file.Name.Equals(FileNames.PeopleFileName));
