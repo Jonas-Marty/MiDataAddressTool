@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using log4net;
 using MoreLinq;
 using Newtonsoft.Json;
@@ -20,12 +19,9 @@ namespace HitzgiAddressTool
 
 		public InformationExchanger InformationExchanger { get; set; }
 
-		private PbsDbWebAccess PbsDbWebAccess
-		{
-			get { return InformationExchanger.PbsDbWebAccess; }
-		}
+		private PbsDbWebAccess PbsDbWebAccess => InformationExchanger.PbsDbWebAccess;
 
-		private readonly Dictionary<Group, IEnumerable<Person>> _groupPeopleAssociations =
+	    private readonly Dictionary<Group, IEnumerable<Person>> _groupPeopleAssociations =
 			new Dictionary<Group, IEnumerable<Person>>();
 
 		private List<Group> _groups = new List<Group>();
@@ -44,7 +40,7 @@ namespace HitzgiAddressTool
 			statusLabel.Text = "Lade Gruppen...";
 
 			_groups = (await PbsDbWebAccess.RecieveAllGroupsFromLayerGroupRecursiveAsync()).ToList();
-			_log.Info(string.Format("Successfully loaded all Groups ({0})", string.Join(",", _groups.Select(group => group.Name))));
+			_log.Info($"Successfully loaded all Groups ({string.Join(",", _groups.Select(group => @group.Name))})");
 			await Task.Run(() => SetGroupPriorities());
 
 			SetDataSourceToGroupCheckedListBox();
@@ -61,7 +57,7 @@ namespace HitzgiAddressTool
 			{
 				bottomStatusLabel.Text = "Lade Personen aus " + group.Name;
 				IEnumerable<Person> people = await PbsDbWebAccess.RecievePersonsOfGroupAsync(group.Id);
-				_log.Info(string.Format("People from group {0} successfully downloaded", @group.Name));
+				_log.Info($"People from group {group.Name} successfully downloaded");
 				_groupPeopleAssociations.Add(group, people);
 			}
 
@@ -125,7 +121,7 @@ namespace HitzgiAddressTool
 			int distinctHitzgiRecievers = _hitzgiAmountCalculator.CalculateTotalAmountOfDistinctHitzgiRecievers(selectedGroups);
 
 			bottomStatusLabel.Visible = true;
-			bottomStatusLabel.Text = string.Format("Um die {0} Personen zu adressieren würden {1} Hitzgis benötigt.", distinctHitzgiRecievers, hitzgiAmount);
+			bottomStatusLabel.Text = $"Um die {distinctHitzgiRecievers} Personen zu adressieren würden {hitzgiAmount} Hitzgis benötigt.";
 		}
 
 		private List<Group> GetCheckedGroups()
@@ -157,10 +153,7 @@ namespace HitzgiAddressTool
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(
-					string.Format(
-						"Excel file konnte nicht gespeichert werden. Wende dich an den ersteller des Programs.\nError: \"{0}\"",
-						ex.Message));
+				MessageBox.Show($"Excel file konnte nicht gespeichert werden. Wende dich an den ersteller des Programs.\nError: \"{ex.Message}\"");
 				_log.Error("Excel file could not be saved", ex);
 			}
 		}
@@ -192,7 +185,7 @@ namespace HitzgiAddressTool
 
 			var excelDocument = ExcelDocument.CreateWithSimpleHeader(rows, true, "Adressen");
 			excelDocument.CloseDocumentAndSaveToFile(new FileInfo(fileName));
-			_log.Info(string.Format("Excel file successfully created at \"{0}\"", fileName));
+			_log.Info($"Excel file successfully created at \"{fileName}\"");
 			Process.Start(fileName);
 		}
 
