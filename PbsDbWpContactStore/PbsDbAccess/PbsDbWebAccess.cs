@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using MoreLinq;
 using PbsDbAccess.Models;
 
 namespace PbsDbAccess
@@ -258,10 +257,7 @@ namespace PbsDbAccess
 		/// <returns>The formated string.</returns>
 		private static string FormatHttpErrorMessage(HttpResponseMessage response)
 		{
-			return string.Format("{0} - {1}\n\nResponse:\n{2}",
-				response.StatusCode,
-				response.ReasonPhrase,
-				response.Content.ReadAsStringAsync().Result);
+			return $"{response.StatusCode} - {response.ReasonPhrase}\n\nResponse:\n{response.Content.ReadAsStringAsync().Result}";
 		}
 
 		/// <summary>
@@ -274,8 +270,8 @@ namespace PbsDbAccess
 		private static Uri CreateUriWithParameters(string urlWithoutParameters, Dictionary<string, string> parameterValueCollection)
 		{
 			var parameterValueProjection = parameterValueCollection
-				.Select(keyValuePair => String.Format("{0}={1}", keyValuePair.Key, keyValuePair.Value));
-			string queryString = "?" + String.Join("&", parameterValueProjection);
+				.Select(keyValuePair => $"{keyValuePair.Key}={keyValuePair.Value}");
+			string queryString = "?" + string.Join("&", parameterValueProjection);
 			return new Uri(urlWithoutParameters + queryString);
 		}
 
