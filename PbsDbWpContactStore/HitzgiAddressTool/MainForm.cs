@@ -57,7 +57,7 @@ namespace HitzgiAddressTool
 			{
 				bottomStatusLabel.Text = "Lade Personen aus " + group.Name;
 				IEnumerable<Person> people = await PbsDbWebAccess.RecievePersonsOfGroupAsync(group.Id);
-				_log.Info($"People from group {group.Name} successfully downloaded");
+				_log.Info(string.Format("People from group {0} successfully downloaded", @group.Name));
 				_groupPeopleAssociations.Add(group, people);
 			}
 
@@ -73,6 +73,7 @@ namespace HitzgiAddressTool
 			priorityUpButton.Visible = true;
 			priorityDownButton.Visible = true;
 			priorityInfoLabel.Visible = true;
+		    copyTnMobileButton.Visible = true;
 
 			//make sure the counts get evaluated if the user have already selected some groups
 			groupsCheckedListBox_SelectedIndexChanged(null, null);
@@ -116,6 +117,7 @@ namespace HitzgiAddressTool
 			excelButton.Enabled = enableNextStep;
 			priorityDownButton.Enabled = enableNextStep;
 			priorityUpButton.Enabled = enableNextStep;
+		    copyTnMobileButton.Enabled = enableNextStep;
 
 			int hitzgiAmount = _hitzgiAmountCalculator.CalculateTotalAmountOfHitzgisNeeded(selectedGroups);
 			int distinctHitzgiRecievers = _hitzgiAmountCalculator.CalculateTotalAmountOfDistinctHitzgiRecievers(selectedGroups);
@@ -198,7 +200,7 @@ namespace HitzgiAddressTool
 				);
 		}
 
-		private Dictionary<Person, Group> AssociateGroupsToPeopleAccordingToThePriorityList(Person[] distinctPeople, List<Group> selectedGroups, Dictionary<string, int> groupPriorities)
+		private Dictionary<Person, Group> AssociateGroupsToPeopleAccordingToThePriorityList(IEnumerable<Person> distinctPeople, IEnumerable<Group> selectedGroups, Dictionary<string, int> groupPriorities)
 		{
 			groupPriorities =
 				groupPriorities.Where(groupPriority => selectedGroups.Any(selectedGroup => selectedGroup.Id == groupPriority.Key))
@@ -213,7 +215,7 @@ namespace HitzgiAddressTool
 						int prioritiy;
 						if (!groupPriorities.TryGetValue(groupWherePersonIsIn.Id, out prioritiy))
 						{
-							prioritiy = -1; //groupPriorities only contains select groups, if group is not selected set priority to a low value
+							prioritiy = -1; //groupPriorities only contains selected groups, if group is not selected set priority to a low value
 						}
 						return prioritiy;
 					}));
@@ -334,5 +336,32 @@ namespace HitzgiAddressTool
 			}
 			return false;
 		}
+
+        private void copyTnMobileButton_Click(object sender, EventArgs e)
+        {
+            var selectedGroups = GetCheckedGroups();
+            var personsDistinct = _hitzgiAmountCalculator.GetPersonsDistinct(selectedGroups);
+
+            var phoneNumbers = personsDistinct
+                .Where(DoesNotHaveLeiterRole)
+                .SelectMany(p => p.PhoneNumbers)
+                .Where(pn => pn.Label != "Privat")
+                .Select(pn => pn.Number)
+                .Distinct().ToArray();
+
+            string phoneNumberString = string.Join("; ", phoneNumbers);
+
+            Clipboard.SetText(phoneNumberString);
+
+            bottomStatusLabel.Text = $"{phoneNumbers.Length} Handynummern in Zwischenablage kopiert";
+
+        }
+
+	    private static bool DoesNotHaveLeiterRole(Person person)
+	    {
+	        return !person.Roles.Any(
+	            role =>
+	                role.RoleType == "Einheitsleiter" || role.RoleType == "Mitleiter" || role.RoleType == "Adressverwalter");
+	    }
 	}
 }
