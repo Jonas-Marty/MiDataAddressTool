@@ -17,7 +17,8 @@ namespace HitzgiAddressTool
 	/// </remarks>
 	public static class FileUtil
 	{
-		private const string BaseFoldername = "HitzgiAddressTool";
+	    private static readonly object _groupPrioritiesLock = new object();
+	    private const string BaseFoldername = "HitzgiAddressTool";
 		private const string CredentialsFileName = "Credentials.dat";
 		private const string GroupPriorityFileName = "GroupPriorities.dat";
 		private const string LogFileName = "HitzgiAdressToolLog.txt";
@@ -46,17 +47,23 @@ namespace HitzgiAddressTool
 		/// Saves the grouppriorities, the key is the id of the group, the value is the priority.
 		/// </summary>
 		/// <param name="groupPriorities">The grouppriorities.</param>
-		public static void SaveGroupPriorities(Dictionary<string, int> groupPriorities)
+		public static void SaveGroupPriorities(Dictionary<string, Tuple<int, bool>> groupPriorities)
 		{
-			Serialize(groupPriorities, GroupPriorityFileName);
+		    lock (_groupPrioritiesLock)
+		    {
+		        Serialize(groupPriorities, GroupPriorityFileName);
+		    }
 		}
 
-		public static Dictionary<string, int> LoadGroupPriorities()
-		{
-			return Deserialize<Dictionary<string, int>>(GroupPriorityFileName);
-		}
+	    public static Dictionary<string, Tuple<int, bool>> LoadGroupPriorities()
+	    {
+	        lock (_groupPrioritiesLock)
+	        {
+	            return Deserialize<Dictionary<string, Tuple<int, bool>>>(GroupPriorityFileName);
+	        }
+	    }
 
-		private static T Deserialize<T>(string fileName)
+	    private static T Deserialize<T>(string fileName)
 		{
 			string fullPath = CreateFullPath(fileName);
 

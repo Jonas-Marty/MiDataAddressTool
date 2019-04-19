@@ -59,7 +59,7 @@ namespace HitzgiAddressTool
             this.groupsCheckedListBox.Name = "groupsCheckedListBox";
             this.groupsCheckedListBox.Size = new System.Drawing.Size(290, 289);
             this.groupsCheckedListBox.TabIndex = 0;
-            this.groupsCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.groupsCheckedListBox_SelectedIndexChanged);
+            this.groupsCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.GroupsCheckedListBox_SelectedIndexChanged);
             // 
             // statusLabel
             // 
@@ -117,7 +117,7 @@ namespace HitzgiAddressTool
             this.excelButton.Text = "Excelliste generiern";
             this.excelButton.UseVisualStyleBackColor = true;
             this.excelButton.Visible = false;
-            this.excelButton.Click += new System.EventHandler(this.excelButton_Click);
+            this.excelButton.Click += new System.EventHandler(this.ExcelButton_Click);
             // 
             // priorityInfoLabel
             // 
@@ -142,7 +142,7 @@ namespace HitzgiAddressTool
             this.priorityUpButton.Text = "Priorität erhöhen";
             this.priorityUpButton.UseVisualStyleBackColor = true;
             this.priorityUpButton.Visible = false;
-            this.priorityUpButton.Click += new System.EventHandler(this.priorityUpButton_Click);
+            this.priorityUpButton.Click += new System.EventHandler(this.PriorityUpButton_Click);
             // 
             // priorityDownButton
             // 
@@ -155,7 +155,7 @@ namespace HitzgiAddressTool
             this.priorityDownButton.Text = "Priorität senken";
             this.priorityDownButton.UseVisualStyleBackColor = true;
             this.priorityDownButton.Visible = false;
-            this.priorityDownButton.Click += new System.EventHandler(this.priorityDownButton_Click);
+            this.priorityDownButton.Click += new System.EventHandler(this.PriorityDownButton_Click);
             // 
             // copyTnMobileButton
             // 
@@ -166,7 +166,7 @@ namespace HitzgiAddressTool
             this.copyTnMobileButton.Text = "TN Handynummern in Zwischenablage kopieren";
             this.copyTnMobileButton.UseVisualStyleBackColor = true;
             this.copyTnMobileButton.Visible = false;
-            this.copyTnMobileButton.Click += new System.EventHandler(this.copyTnMobileButton_Click);
+            this.copyTnMobileButton.Click += new System.EventHandler(this.CopyTnMobileButton_Click);
             // 
             // MainForm
             // 
