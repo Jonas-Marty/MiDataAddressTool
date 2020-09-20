@@ -2,34 +2,34 @@
 
 namespace HitzgiAddressTool
 {
-	partial class MainForm
-	{
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private IContainer components = null;
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupsCheckedListBox = new System.Windows.Forms.CheckedListBox();
@@ -59,7 +59,7 @@ namespace HitzgiAddressTool
             this.groupsCheckedListBox.Name = "groupsCheckedListBox";
             this.groupsCheckedListBox.Size = new System.Drawing.Size(290, 289);
             this.groupsCheckedListBox.TabIndex = 0;
-            this.groupsCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.groupsCheckedListBox_SelectedIndexChanged);
+            this.groupsCheckedListBox.SelectedIndexChanged += new System.EventHandler(this.GroupsCheckedListBox_SelectedIndexChanged);
             // 
             // statusLabel
             // 
@@ -117,7 +117,7 @@ namespace HitzgiAddressTool
             this.excelButton.Text = "Excelliste generiern";
             this.excelButton.UseVisualStyleBackColor = true;
             this.excelButton.Visible = false;
-            this.excelButton.Click += new System.EventHandler(this.excelButton_Click);
+            this.excelButton.Click += new System.EventHandler(this.ExcelButton_Click);
             // 
             // priorityInfoLabel
             // 
@@ -142,7 +142,7 @@ namespace HitzgiAddressTool
             this.priorityUpButton.Text = "Priorität erhöhen";
             this.priorityUpButton.UseVisualStyleBackColor = true;
             this.priorityUpButton.Visible = false;
-            this.priorityUpButton.Click += new System.EventHandler(this.priorityUpButton_Click);
+            this.priorityUpButton.Click += new System.EventHandler(this.PriorityUpButton_Click);
             // 
             // priorityDownButton
             // 
@@ -155,7 +155,7 @@ namespace HitzgiAddressTool
             this.priorityDownButton.Text = "Priorität senken";
             this.priorityDownButton.UseVisualStyleBackColor = true;
             this.priorityDownButton.Visible = false;
-            this.priorityDownButton.Click += new System.EventHandler(this.priorityDownButton_Click);
+            this.priorityDownButton.Click += new System.EventHandler(this.PriorityDownButton_Click);
             // 
             // copyTnMobileButton
             // 
@@ -166,6 +166,7 @@ namespace HitzgiAddressTool
             this.copyTnMobileButton.Text = "TN Handynummern in Zwischenablage kopieren";
             this.copyTnMobileButton.UseVisualStyleBackColor = true;
             this.copyTnMobileButton.Visible = false;
+            this.copyTnMobileButton.Click += new System.EventHandler(this.CopyTnMobileButton_Click);
             // 
             // MainForm
             // 
@@ -192,20 +193,20 @@ namespace HitzgiAddressTool
             ((System.ComponentModel.ISupportInitialize)(this.bottomLoadingPictureBox)).EndInit();
             this.ResumeLayout(false);
 
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private System.Windows.Forms.CheckedListBox groupsCheckedListBox;
-		private System.Windows.Forms.Label statusLabel;
-		private System.Windows.Forms.PictureBox loadingGroupsPictureBox;
-		private System.Windows.Forms.PictureBox bottomLoadingPictureBox;
-		private System.Windows.Forms.Label bottomStatusLabel;
-		private System.Windows.Forms.Button excelButton;
-		private System.IO.Ports.SerialPort serialPort1;
-		private System.Windows.Forms.Label priorityInfoLabel;
-		private System.Windows.Forms.Button priorityUpButton;
-		private System.Windows.Forms.Button priorityDownButton;
+        private System.Windows.Forms.CheckedListBox groupsCheckedListBox;
+        private System.Windows.Forms.Label statusLabel;
+        private System.Windows.Forms.PictureBox loadingGroupsPictureBox;
+        private System.Windows.Forms.PictureBox bottomLoadingPictureBox;
+        private System.Windows.Forms.Label bottomStatusLabel;
+        private System.Windows.Forms.Button excelButton;
+        private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.Label priorityInfoLabel;
+        private System.Windows.Forms.Button priorityUpButton;
+        private System.Windows.Forms.Button priorityDownButton;
         private System.Windows.Forms.Button copyTnMobileButton;
     }
 }

@@ -29,6 +29,7 @@ namespace HitzgiAddressTool
         private HitzgiAmountCalculator _hitzgiAmountCalculator;
         private bool _groupAndPeopleLoadingComplete;
         private Task _prioritySaveTask;
+        private Dictionary<string, Tuple<int, bool>> _groupPriorities;
 
         public MainForm()
         {
@@ -44,6 +45,8 @@ namespace HitzgiAddressTool
             await Task.Run(() => SetGroupPriorities());
 
             SetDataSourceToGroupCheckedListBox();
+
+            SetSelectedGroups();
 
             loadingGroupsPictureBox.Visible = false;
             statusLabel.Text = "Bitte wähle nun alle Gruppen aus, dessen Mitglieder ein Hitzgi erhalten sollen";
@@ -73,36 +76,38 @@ namespace HitzgiAddressTool
             priorityUpButton.Visible = true;
             priorityDownButton.Visible = true;
             priorityInfoLabel.Visible = true;
+            copyTnMobileButton.Visible = true;
 
             //make sure the counts get evaluated if the user have already selected some groups
-            groupsCheckedListBox_SelectedIndexChanged(null, null);
+            GroupsCheckedListBox_SelectedIndexChanged(null, null);
+        }
+
+        private void SetSelectedGroups()
+        {
+            foreach (var selectedGroup in _groupPriorities.Where(groupPriority => groupPriority.Value.Item2))
+            {
+                groupsCheckedListBox.SetItemChecked(_groups.FindIndex(group => group.Id == selectedGroup.Key), true);
+            }
         }
 
         private void SetGroupPriorities()
         {
-            Dictionary<string, int> groupPriorities;
-            if (TryLoadPriorityList(out groupPriorities))
+            if (TryLoadPriorityList(out var groupPriorities))
             {
+                _groupPriorities = groupPriorities;
                 ApplyGroupPriorities(groupPriorities);
             } //else ignore
         }
 
-        private void ApplyGroupPriorities(Dictionary<string, int> groupPriorities)
+        private void ApplyGroupPriorities(Dictionary<string, Tuple<int, bool>> groupPriorities)
         {
-            var priorityOrderedGroups = _groups.OrderByDescending(group =>
-            {
-                int priority;
-                if (!groupPriorities.TryGetValue(group.Id, out priority))
-                {
-                    priority = 0;
-                }
-                return priority;
-            });
-
+            var priorityOrderedGroups = _groups
+                .OrderByDescending(group => groupPriorities.TryGetValue(group.Id, out var groupNumberPriorityTuple) ? groupNumberPriorityTuple.Item1 : 0);
             _groups = priorityOrderedGroups.ToList();
+            
         }
 
-        private void groupsCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void GroupsCheckedListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!_groupAndPeopleLoadingComplete) //do calculation only if download complete
             {
@@ -116,12 +121,14 @@ namespace HitzgiAddressTool
             excelButton.Enabled = enableNextStep;
             priorityDownButton.Enabled = enableNextStep;
             priorityUpButton.Enabled = enableNextStep;
+            copyTnMobileButton.Enabled = enableNextStep;
 
             int hitzgiAmount = _hitzgiAmountCalculator.CalculateTotalAmountOfHitzgisNeeded(selectedGroups);
             int distinctHitzgiRecievers = _hitzgiAmountCalculator.CalculateTotalAmountOfDistinctHitzgiRecievers(selectedGroups);
 
             bottomStatusLabel.Visible = true;
             bottomStatusLabel.Text = $"Um die {distinctHitzgiRecievers} Personen zu adressieren würden {hitzgiAmount} Hitzgis benötigt.";
+            SaveCurrentPriorityList();
         }
 
         private List<Group> GetCheckedGroups()
@@ -129,7 +136,7 @@ namespace HitzgiAddressTool
             return groupsCheckedListBox.CheckedItems.Cast<Group>().ToList();
         }
 
-        private void excelButton_Click(object sender, EventArgs e)
+        private void ExcelButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog fileDialog = new SaveFileDialog
             {
@@ -165,7 +172,7 @@ namespace HitzgiAddressTool
             var groupPriorities = GetUserSetGroupPriority();
 
             Dictionary<Person, Group> prioritizedPeopleGroupAssociation =
-                AssociateGroupsToPeopleAccordingToThePriorityList(distinctPeople, selectedGroups, groupPriorities);
+                AssociateGroupsToPeopleAccordingToThePriorityList(distinctPeople, selectedGroups, groupPriorities.ToDictionary(x => x.Key, x => x.Value.Item1));
 
             var orderedPeople = prioritizedPeopleGroupAssociation
                 .OrderBy(kvp => kvp.Key.Address)
@@ -189,16 +196,17 @@ namespace HitzgiAddressTool
             Process.Start(fileName);
         }
 
-        private Dictionary<string, int> GetUserSetGroupPriority()
+        private Dictionary<string, Tuple<int, bool>> GetUserSetGroupPriority()
         {
             return groupsCheckedListBox.Items.Cast<Group>()
                 .ToDictionary(
                     group => group.Id,
-                    group => _groups.Count - _groups.IndexOf(group) //Indexes of _groups are in sync with the ones in groupsCheckedListBox
+                    group => Tuple.Create(_groups.Count - _groups.IndexOf(group), //Indexes of _groups are in sync with the ones in groupsCheckedListBox
+                        GetCheckedGroups().Contains(group))
                 );
         }
 
-        private Dictionary<Person, Group> AssociateGroupsToPeopleAccordingToThePriorityList(Person[] distinctPeople, List<Group> selectedGroups, Dictionary<string, int> groupPriorities)
+        private Dictionary<Person, Group> AssociateGroupsToPeopleAccordingToThePriorityList(IEnumerable<Person> distinctPeople, IEnumerable<Group> selectedGroups, Dictionary<string, int> groupPriorities)
         {
             groupPriorities =
                 groupPriorities.Where(groupPriority => selectedGroups.Any(selectedGroup => selectedGroup.Id == groupPriority.Key))
@@ -212,13 +220,13 @@ namespace HitzgiAddressTool
                     {
                         if (!groupPriorities.TryGetValue(groupWherePersonIsIn.Id, out int prioritiy))
                         {
-                            prioritiy = -1; //groupPriorities only contains select groups, if group is not selected set priority to a low value
+                            prioritiy = -1; //groupPriorities only contains selected groups, if group is not selected set priority to a low value
                         }
                         return prioritiy;
                     }).First());
         }
 
-        private void priorityUpButton_Click(object sender, EventArgs e)
+        private void PriorityUpButton_Click(object sender, EventArgs e)
         {
             if (!IsAnyElementSelected(groupsCheckedListBox))
             {
@@ -229,7 +237,7 @@ namespace HitzgiAddressTool
             SaveCurrentPriorityList();
         }
 
-        private void priorityDownButton_Click(object sender, EventArgs e)
+        private void PriorityDownButton_Click(object sender, EventArgs e)
         {
             if (!IsAnyElementSelected(groupsCheckedListBox))
             {
@@ -277,7 +285,7 @@ namespace HitzgiAddressTool
             }
 
             //reset selected index specific things
-            groupsCheckedListBox_SelectedIndexChanged(null, null);
+            GroupsCheckedListBox_SelectedIndexChanged(null, null);
         }
 
         private void SetDataSourceToGroupCheckedListBox()
@@ -294,7 +302,7 @@ namespace HitzgiAddressTool
 
         private void SaveCurrentPriorityList()
         {
-            Dictionary<string, int> groupPriorities = GetUserSetGroupPriority();
+            var groupPriorities = GetUserSetGroupPriority();
 
             _prioritySaveTask = Task.Run(() => FileUtil.SaveGroupPriorities(groupPriorities));
             _prioritySaveTask.ContinueWith(HandelGroupPrioritySaveTaskExceptions);
@@ -312,7 +320,7 @@ namespace HitzgiAddressTool
             }
         }
 
-        private bool TryLoadPriorityList(out Dictionary<string, int> groupPriorityList)
+        private bool TryLoadPriorityList(out Dictionary<string, Tuple<int, bool>> groupPriorityList)
         {
             groupPriorityList = null;
             try
@@ -332,6 +340,33 @@ namespace HitzgiAddressTool
                 //somthings wrong with the file, ignore it
             }
             return false;
+        }
+
+        private void CopyTnMobileButton_Click(object sender, EventArgs e)
+        {
+            var selectedGroups = GetCheckedGroups();
+            var personsDistinct = _hitzgiAmountCalculator.GetPersonsDistinct(selectedGroups);
+
+            var phoneNumbers = personsDistinct
+                .Where(DoesNotHaveLeiterRole)
+                .SelectMany(p => p.PhoneNumbers)
+                .Where(pn => pn.Label != "Privat")
+                .Select(pn => pn.Number)
+                .Distinct().ToArray();
+
+            string phoneNumberString = string.Join("; ", phoneNumbers);
+
+            Clipboard.SetText(phoneNumberString);
+
+            bottomStatusLabel.Text = $"{phoneNumbers.Length} Handynummern in Zwischenablage kopiert";
+
+        }
+
+        private static bool DoesNotHaveLeiterRole(Person person)
+        {
+            return !person.Roles.Any(
+                role =>
+                    role.RoleType == "Einheitsleiter" || role.RoleType == "Mitleiter" || role.RoleType == "Adressverwalter");
         }
     }
 }
