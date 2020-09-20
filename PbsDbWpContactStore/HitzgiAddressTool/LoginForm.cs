@@ -1,129 +1,151 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using log4net;
 using Newtonsoft.Json;
 using PbsDbAccess;
 
 namespace HitzgiAddressTool
 {
-	public partial class LoginForm : Form
-	{
-		private readonly ILog _log = LogManager.GetLogger(typeof(LoginForm));
+    public partial class LoginForm : Form
+    {
+        private readonly ILog _log = LogManager.GetLogger(typeof(LoginForm));
 
-		public LoginForm()
-		{
-			InitializeComponent();
-		}
+        public LoginForm()
+        {
+            InitializeComponent();
+            SetVisibility();
+        }
 
-		public InformationExchanger InformationExchanger { get; set; }
+        public InformationExchanger InformationExchanger { get; set; }
 
-		private async void loginButton_Click(object sender, EventArgs e)
-		{
-			if (string.IsNullOrWhiteSpace(emailTextBox.Text) || string.IsNullOrWhiteSpace(passwortTextBox.Text))
-			{
-				return;
-			}
+        private async void LoginButton_Click(object sender, EventArgs e)
+        {
+            if (TokenRadioButton.Checked)
+            {
+                if (string.IsNullOrWhiteSpace(EmailTextBox.Text) || string.IsNullOrWhiteSpace(PasswordTextBox.Text))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(GroupIdTextBox.Text) || string.IsNullOrWhiteSpace(TokenTextBox.Text))
+                {
+                    return;
+                }
+            }
 
-			SaveCredentials();
+            SaveCredentials();
 
-			EnterLoadingMode();
+            EnterLoadingMode();
 
-			try
-			{
-				//TODO Catch  [System.Net.Http.HttpRequestException]	{"An error occurred while sending the request."}	System.Net.Http.HttpRequestException
-				// -		InnerException	{"The remote name could not be resolved: 'db.scout.ch'"}	System.Exception {System.Net.WebException}
-				/*   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
-   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
-   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
-   at PbsDbAccess.PbsDbWebAccess.<CreateInstanceAsync>d__9.MoveNext() in h:\Programmieren\GitHub\HitobitoPBS_WPContactStore\PbsDbWpContactStore\PbsDbAccess\PbsDbWebAccess.cs:line 102
---- End of stack trace from previous location where exception was thrown ---
-   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
-   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
-   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
-   at HitzgiAddressTool.LoginForm.<loginButton_Click>d__0.MoveNext() in h:\Programmieren\GitHub\HitobitoPBS_WPContactStore\PbsDbWpContactStore\HitzgiAddressTool\LoginForm.cs:line 46
-				 */
-				//Consider catching in PbsDvWebAccess and throwing a custom Exception, together with loggin the
-				//original exception.
-				//In the UI show something like: "Die Verbindung zur Datenbank konnte nicht hergestellt werden,
-				//Prüfe ob db.scout.ch über de Browser erreichbar ist, falls ja, dann wende dich an den Ersteller
-				//dieses Programmes und sende ihm das logfile welches du <<hier>> findest.
-				InformationExchanger.PbsDbWebAccess = await PbsDbWebAccess.CreateInstanceAsync(emailTextBox.Text, passwortTextBox.Text);
-				errorLabel.Text = "Login erfolgreich :)";
-				_log.Info("Successfully logged in");
-				Thread.Sleep(500);
-				Close();
-			}
-			catch (InvalidLoginInformationException ex)
-			{
-				errorLabel.Text = ex.Message;
-				_log.Info("Wrong login credentials provided");
-			}
+            try
+            {
+                if (TokenRadioButton.Checked)
+                {
+                    InformationExchanger.PbsDbWebAccess = await PbsDbWebAccess.CreateInstanceAsyncServiceUser(TokenTextBox.Text, GroupIdTextBox.Text);
+                }
+                else
+                {
+                    InformationExchanger.PbsDbWebAccess = await PbsDbWebAccess.CreateInstanceAsyncUser(EmailTextBox.Text, PasswordTextBox.Text);
+                }
+                ErrorLabel.Text = "Login erfolgreich :)";
+                _log.Info("Successfully logged in");
+                Thread.Sleep(500);
+                Close();
+            }
+            catch (InvalidLoginInformationException ex)
+            {
+                ErrorLabel.Text = ex.Message;
+                _log.Info("Wrong login credentials provided");
+            }
 
-			LeaveLoadingMode();
-		}
+            LeaveLoadingMode();
+        }
 
-		private void LeaveLoadingMode()
-		{
-			SetMode(false);
-		}
+        private void LeaveLoadingMode()
+        {
+            SetMode(false);
+        }
 
-		private void EnterLoadingMode()
-		{
-			SetMode(true);
-		}
+        private void EnterLoadingMode()
+        {
+            SetMode(true);
+        }
 
-		private void SetMode(bool isLoading)
-		{
-			emailTextBox.Enabled = !isLoading;
-			passwortTextBox.Enabled = !isLoading;
-			loginButton.Enabled = !isLoading;
-			loadingPictureBox.Visible = isLoading;
-		}
+        private void SetMode(bool isLoading)
+        {
+            EmailTextBox.Enabled = !isLoading;
+            PasswordTextBox.Enabled = !isLoading;
+            LoginButton.Enabled = !isLoading;
+            loadingPictureBox.Visible = isLoading;
+        }
 
-		private void LoginForm_Load(object sender, EventArgs e)
-		{
-			LoadCredentials();
-		}
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+            LoadCredentials();
+        }
 
-		private void SaveCredentials()
-		{
-			LoginCredentials credentials = new LoginCredentials { Email = emailTextBox.Text, Password = passwortTextBox.Text };
+        private void SaveCredentials()
+        {
+            LoginCredentials credentials = new LoginCredentials { Email = EmailTextBox.Text, Password = PasswordTextBox.Text, Token = TokenTextBox.Text, PrimaryGroupId = GroupIdTextBox.Text };
 
-			try
-			{
-				FileUtil.SaveLoginCredentials(credentials);
-				_log.Info("Credentials successfully saved");
-			}
-			catch (IOException ex)
-			{
-				_log.Warn("Credentials could not be saved", ex);
-			}
-		}
+            try
+            {
+                FileUtil.SaveLoginCredentials(credentials);
+                _log.Info("Credentials successfully saved");
+            }
+            catch (IOException ex)
+            {
+                _log.Warn("Credentials could not be saved", ex);
+            }
+        }
 
-		private void LoadCredentials()
-		{
-			try
-			{
-				LoginCredentials loadedCredentials = FileUtil.LoadLoginCredentials();
-				emailTextBox.Text = loadedCredentials.Email;
-				passwortTextBox.Text = loadedCredentials.Password;
-				_log.Info("Credentials successfully loaded");
-			}
-			catch (JsonReaderException ex) //Something was wrong with the saved JsonText
-			{
-				_log.Warn("Credentials could not be loaded", ex);
-				//do nothing, just skip loading
-			}
-			catch (IOException ex) //thrown by new FileStream(...) if somethings wrong there
-			{
-				_log.Warn("Credentials could not be loaded", ex);
-				//also do nothing and skip loading the credentials
-			}
-		}
-	}
+        private void LoadCredentials()
+        {
+            try
+            {
+                LoginCredentials loadedCredentials = FileUtil.LoadLoginCredentials();
+                EmailTextBox.Text = loadedCredentials.Email;
+                PasswordTextBox.Text = loadedCredentials.Password;
+                TokenTextBox.Text = loadedCredentials.Token;
+                GroupIdTextBox.Text = loadedCredentials.PrimaryGroupId;
+                _log.Info("Credentials successfully loaded");
+            }
+            catch (JsonReaderException ex) //Something was wrong with the saved JsonText
+            {
+                _log.Warn("Credentials could not be loaded", ex);
+                //do nothing, just skip loading
+            }
+            catch (IOException ex) //thrown by new FileStream(...) if somethings wrong there
+            {
+                _log.Warn("Credentials could not be loaded", ex);
+                //also do nothing and skip loading the credentials
+            }
+        }
+
+        private void TokenRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            SetVisibility();
+        }
+
+        private void UserRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            SetVisibility();
+        }
+
+        private void SetVisibility()
+        {
+            TokenLabel.Visible = TokenRadioButton.Checked;
+            TokenTextBox.Visible = TokenRadioButton.Checked;
+            GroupIdLabel.Visible = TokenRadioButton.Checked;
+            GroupIdTextBox.Visible = TokenRadioButton.Checked;
+            PasswordLabel.Visible = !TokenRadioButton.Checked;
+            PasswordTextBox.Visible = !TokenRadioButton.Checked;
+            EmailTextBox.Visible = !TokenRadioButton.Checked;
+            EmailLabel.Visible = !TokenRadioButton.Checked;
+        }
+    }
 }

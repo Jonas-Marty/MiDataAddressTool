@@ -166,7 +166,6 @@ namespace HitzgiAddressTool
             this.copyTnMobileButton.Text = "TN Handynummern in Zwischenablage kopieren";
             this.copyTnMobileButton.UseVisualStyleBackColor = true;
             this.copyTnMobileButton.Visible = false;
-            this.copyTnMobileButton.Click += new System.EventHandler(this.copyTnMobileButton_Click);
             // 
             // MainForm
             // 

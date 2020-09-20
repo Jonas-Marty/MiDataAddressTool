@@ -38,14 +38,9 @@ namespace PbsDbAccess
 
 			LoggedinUserInformation info = new LoggedinUserInformation
 			{
-				Id = root.People[0].Id,
 				Email = root.People[0].Email,
-				Token = root.People[0].AuthenticationToken,
+				UserToken = root.People[0].AuthenticationToken,
 				PrimaryGroupId = root.People[0].Links.PrimaryGroup,
-				PrimaryGroupType = root.Linked.Groups.First(group => group.Id == root.People[0].Links.PrimaryGroup).GroupType,
-				LastName = root.People[0].LastName,
-				FirstName = root.People[0].FirstName,
-				Nickname = root.People[0].Nickname
 			};
 
 			return info;
