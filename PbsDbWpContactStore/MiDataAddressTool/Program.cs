@@ -6,7 +6,7 @@ using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
 	static class Program
 	{

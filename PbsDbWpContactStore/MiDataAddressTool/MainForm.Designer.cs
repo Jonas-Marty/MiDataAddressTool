@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
     partial class MainForm
     {

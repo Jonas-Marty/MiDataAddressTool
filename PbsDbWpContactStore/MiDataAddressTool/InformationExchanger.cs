@@ -1,6 +1,6 @@
 ﻿using PbsDbAccess;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
 	public class InformationExchanger
 	{

@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
 	/// <summary>
 	/// 
@@ -18,7 +18,7 @@ namespace HitzgiAddressTool
 	public static class FileUtil
 	{
 	    private static readonly object _groupPrioritiesLock = new object();
-	    private const string BaseFoldername = "HitzgiAddressTool";
+	    private const string BaseFoldername = "MiDataAddressTool";
 		private const string CredentialsFileName = "Credentials.dat";
 		private const string GroupPriorityFileName = "GroupPriorities.dat";
 		private const string LogFileName = "HitzgiAdressToolLog.txt";

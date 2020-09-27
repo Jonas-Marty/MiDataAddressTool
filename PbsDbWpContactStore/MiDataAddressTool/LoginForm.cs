@@ -6,7 +6,7 @@ using log4net;
 using Newtonsoft.Json;
 using PbsDbAccess;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
     public partial class LoginForm : Form
     {
@@ -22,19 +22,13 @@ namespace HitzgiAddressTool
 
         private async void LoginButton_Click(object sender, EventArgs e)
         {
-            if (TokenRadioButton.Checked)
+            if (TokenRadioButton.Checked && (string.IsNullOrWhiteSpace(GroupIdTextBox.Text) || string.IsNullOrWhiteSpace(TokenTextBox.Text)))
             {
-                if (string.IsNullOrWhiteSpace(EmailTextBox.Text) || string.IsNullOrWhiteSpace(PasswordTextBox.Text))
-                {
-                    return;
-                }
+                return;
             }
-            else
+            else if (UserRadioButton.Checked && (string.IsNullOrWhiteSpace(EmailTextBox.Text) || string.IsNullOrWhiteSpace(PasswordTextBox.Text)))
             {
-                if (string.IsNullOrWhiteSpace(GroupIdTextBox.Text) || string.IsNullOrWhiteSpace(TokenTextBox.Text))
-                {
-                    return;
-                }
+                return;
             }
 
             SaveCredentials();

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
 	partial class LoginForm
 	{

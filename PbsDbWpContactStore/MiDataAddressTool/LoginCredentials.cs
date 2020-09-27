@@ -1,4 +1,4 @@
-﻿namespace HitzgiAddressTool
+﻿namespace MiDataAddressTool
 {
 	public class LoginCredentials
 	{

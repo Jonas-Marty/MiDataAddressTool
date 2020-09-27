@@ -7,7 +7,7 @@ using System.Threading;
 using OfficeOpenXml;
 using OfficeOpenXml.Table;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
 	public class ExcelDocument : IDisposable
 	{

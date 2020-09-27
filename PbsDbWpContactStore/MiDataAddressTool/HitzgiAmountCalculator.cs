@@ -3,7 +3,7 @@ using System.Linq;
 using MoreLinq;
 using PbsDbAccess.Models;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
 	public class HitzgiAmountCalculator
 	{

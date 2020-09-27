@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using PbsDbAccess;
 using PbsDbAccess.Models;
 
-namespace HitzgiAddressTool
+namespace MiDataAddressTool
 {
     public partial class MainForm : Form
     {
