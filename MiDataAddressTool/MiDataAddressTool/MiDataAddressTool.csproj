@@ -153,9 +153,9 @@
     <None Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PbsDbAccess\PbsDbAccess.csproj">
+    <ProjectReference Include="..\PbsDbAccess\MiDataAccess.csproj">
       <Project>{c6444ff2-5ccb-411a-9327-5bb2b46acbf3}</Project>
-      <Name>PbsDbAccess</Name>
+      <Name>MiDataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
