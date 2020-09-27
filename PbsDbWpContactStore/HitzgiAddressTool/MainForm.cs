@@ -84,6 +84,10 @@ namespace HitzgiAddressTool
 
         private void SetSelectedGroups()
         {
+            if (_groupPriorities == null)
+            {
+                return;
+            }
             foreach (var selectedGroup in _groupPriorities.Where(groupPriority => groupPriority.Value.Item2))
             {
                 groupsCheckedListBox.SetItemChecked(_groups.FindIndex(group => group.Id == selectedGroup.Key), true);
