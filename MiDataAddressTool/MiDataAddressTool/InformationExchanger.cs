@@ -1,9 +1,6 @@
-﻿using PbsDbAccess;
+﻿namespace MiDataAddressTool;
 
-namespace MiDataAddressTool
+public class InformationExchanger
 {
-	public class InformationExchanger
-	{
-		public PbsDbWebAccess PbsDbWebAccess { get; set; } 
-	}
+    public MiDataAccess.MiDataAccess MiDataAccess { get; set; } 
 }

@@ -1,11 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiDataAccess", "MiDataAccess\MiDataAccess.csproj", "{C6444FF2-5CCB-411A-9327-5BB2B46ACBF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiDataAddressTool", "MiDataAddressTool\MiDataAddressTool.csproj", "{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiDataAddressTool", "MiDataAddressTool\MiDataAddressTool.csproj", "{EE39C1E5-ACA5-48BE-9E18-C1F465ACAA37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{0DB1E8FB-2ED9-4171-A29A-BE1F4FD3520B}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

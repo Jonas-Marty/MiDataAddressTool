@@ -5,94 +5,93 @@ using log4net.Appender;
 using log4net.Config;
 using log4net.Core;
 using log4net.Layout;
+using OfficeOpenXml;
 
-namespace MiDataAddressTool
+namespace MiDataAddressTool;
+static class Program
 {
-	static class Program
-	{
-		private static ILog Log;
+    private static ILog Log;
 
-		private const int LogLevel = 4;
-		//0 -- prints only FATAL messages 
-		//1 -- prints FATAL and ERROR messages 
-		//2 -- prints FATAL , ERROR and WARN messages 
-		//3 -- prints FATAL  , ERROR , WARN and INFO messages 
-		//4 -- prints FATAL  , ERROR , WARN , INFO and DEBUG messages 
+    private const int LogLevel = 4;
+    //0 -- prints only FATAL messages 
+    //1 -- prints FATAL and ERROR messages 
+    //2 -- prints FATAL , ERROR and WARN messages 
+    //3 -- prints FATAL  , ERROR , WARN and INFO messages 
+    //4 -- prints FATAL  , ERROR , WARN , INFO and DEBUG messages 
 
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    static void Main()
+    {
+        log4net.Util.LogLog.InternalDebugging = true;
+        Log = LogManager.GetLogger(typeof (Program));
 
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main()
-		{
-			log4net.Util.LogLog.InternalDebugging = true;
-			Log = LogManager.GetLogger(typeof (Program));
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-			AppDomain.CurrentDomain.UnhandledException +=
-				(o, e) => Log.Fatal("Unhandled Exception in Current Domain", e.ExceptionObject as Exception);
+        AppDomain.CurrentDomain.UnhandledException +=
+            (o, e) => Log.Fatal("Unhandled Exception in Current Domain", e.ExceptionObject as Exception);
 
-			var layout = new PatternLayout("%date Thread:[%2thread] %-5level %logger - %message%newline")
-			{
+        var layout = new PatternLayout("%date Thread:[%2thread] %-5level %logger - %message%newline")
+        {
 				
-				Header = "[Log Start]\n",
-				Footer = "[Log End]\n" + new string('-', 60) + "\n"
-			};
+            Header = "[Log Start]\n",
+            Footer = "[Log End]\n" + new string('-', 60) + "\n"
+        };
 
-			var fileAppender = new FileAppender
-			{
-				AppendToFile = true,
-				File = FileUtil.FullLogFilePath,
-				ImmediateFlush = true,
-				LockingModel = new FileAppender.ExclusiveLock(),
-				Name = "HATFileAppender",
-				Threshold = new Level(LogLevel, "DEBUG"),
-				Layout = layout				
-			};
+        var fileAppender = new FileAppender
+        {
+            AppendToFile = true,
+            File = FileUtil.FullLogFilePath,
+            ImmediateFlush = true,
+            LockingModel = new FileAppender.ExclusiveLock(),
+            Name = "HATFileAppender",
+            Threshold = new Level(LogLevel, "DEBUG"),
+            Layout = layout				
+        };
 
-			fileAppender.ActivateOptions();
+        fileAppender.ActivateOptions();
 
-			BasicConfigurator.Configure(fileAppender);
+        BasicConfigurator.Configure(fileAppender);
 
-			
-
-			Log.Info("Program started and log4net configured");
-			Log.Info(string.Format("ProductName: {0}", Application.ProductName));
-			Log.Info(string.Format("ProductVersion: {0}", Application.ProductVersion));
-			Log.Info(string.Format("ExecutablePath: {0}", Application.ExecutablePath));
-			Log.Info(string.Format("StartUpPath: {0}", Application.StartupPath));
-			Log.Info(string.Format("OS: {0}", Environment.OSVersion));
-			Log.Info(string.Format("UserName: {0}", Environment.UserName));
-			Log.Info(string.Format("MachineName: {0}", Environment.MachineName));
-			Log.Info(string.Format("ProcessorCount: {0}", Environment.ProcessorCount));
-			Log.Info(string.Format("CurrentCulture: {0}", Application.CurrentCulture));
-			Log.Info(string.Format("CurrentInputLangugage: {0}", Application.CurrentCulture));
-			Log.Info(string.Format("ClrVersion: {0}", Environment.Version));
+        Log.Info("Program started and log4net configured");
+        Log.Info($"ProductName: {Application.ProductName}");
+        Log.Info($"ProductVersion: {Application.ProductVersion}");
+        Log.Info($"ExecutablePath: {Application.ExecutablePath}");
+        Log.Info($"StartUpPath: {Application.StartupPath}");
+        Log.Info($"OS: {Environment.OSVersion}");
+        Log.Info($"UserName: {Environment.UserName}");
+        Log.Info($"MachineName: {Environment.MachineName}");
+        Log.Info($"ProcessorCount: {Environment.ProcessorCount}");
+        Log.Info($"CurrentCulture: {Application.CurrentCulture}");
+        Log.Info($"CurrentInputLanguage: {Application.CurrentCulture}");
+        Log.Info($"ClrVersion: {Environment.Version}");
 
 
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
+        Application.EnableVisualStyles();
+        Application.SetHighDpiMode(HighDpiMode.SystemAware);
+        Application.SetCompatibleTextRenderingDefault(false);
 
-			InformationExchanger informationExchanger = new InformationExchanger();
-			LoginForm loginForm = new LoginForm { InformationExchanger = informationExchanger };
+        InformationExchanger informationExchanger = new InformationExchanger();
+        LoginForm loginForm = new LoginForm { InformationExchanger = informationExchanger };
 
-			Log.Info("Show LoginForm");
-			loginForm.ShowDialog();
-			Log.Info("LoginForm closed");
+        Log.Info("Show LoginForm");
+        loginForm.ShowDialog();
+        Log.Info("LoginForm closed");
 
-			if (informationExchanger.PbsDbWebAccess == null) //then terminate programm because user closed form
-			{
-				Log.Info("Programm terminated after LoginForm has been closed");
-				return;
-			}
+        if (informationExchanger.MiDataAccess == null) //then terminate program because user closed form
+        {
+            Log.Info("Program terminated after LoginForm has been closed");
+            return;
+        }
 
-			MainForm mainForm = new MainForm { InformationExchanger = informationExchanger };
+        MainForm mainForm = new MainForm { InformationExchanger = informationExchanger };
 
-			Log.Info("Show MainForm");
-			mainForm.ShowDialog();
-			Log.Info("MainForm closed");
+        Log.Info("Show MainForm");
+        mainForm.ShowDialog();
+        Log.Info("MainForm closed");
 
-			Log.Info("Program terminated after MainForm has been closed");
-		}
-	}
+        Log.Info("Program terminated after MainForm has been closed");
+    }
 }
